@@ -61,5 +61,6 @@ SymbolTable.py
 # Other useful links
 
 [Jira Board - Assembler](https://app.plane.so/projects-of-samuel/projects/ce5644c6-58a1-42e6-9b62-bd986f45037b/issues/)
+> Let me know if you would like access - I will need to add you to the workspace
 
-[My personal site](https://ngmysamuel.github.io/)
+[My personal site!](https://ngmysamuel.github.io/)
