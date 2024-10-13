@@ -7,7 +7,9 @@
 
 4. [Files](#files)
 
-5. [Links](#links)
+5. [Resources](#resources)
+
+6. [Other useful links](#other-useful-links)
 
 # Assembler
 
@@ -48,10 +50,16 @@ SymbolTable.py
 > Keeps track of memory/instruction locations (RAM/ROM) for symbols found in asm files
 ```
 
-# Links
+# Resources
 
 [Computer Architecture](https://www.nand2tetris.org/_files/ugd/44046b_b2cad2eea33847869b86c541683551a7.pdf)
 
 [Machine Language](https://www.nand2tetris.org/_files/ugd/44046b_d70026d8c1424487a451eaba3e372132.pdf)
 
 [Assembler](https://www.nand2tetris.org/_files/ugd/44046b_89a8e226476741a3b7c5204575b8a0b2.pdf)
+
+# Other useful links
+
+[Jira Board - Assembler](https://app.plane.so/projects-of-samuel/projects/ce5644c6-58a1-42e6-9b62-bd986f45037b/issues/)
+
+[My personal site](https://ngmysamuel.github.io/)
