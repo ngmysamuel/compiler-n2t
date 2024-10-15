@@ -1,17 +1,17 @@
-from Parser import Parser
-from Code import Code
-from SymbolTable import SymbolTable
+import parser
+import code
+import symboltable
 
 import sys
 
 def assemble(src, dest):
   print("Initializing classes")
-  c = Code()
-  s = SymbolTable()
-  with Parser(src, s) as p:
+  c = code.Code()
+  s = symboltable.SymbolTable()
+  with parser.Parser(src, s) as p:
     while p.advance_first_pass(): # first pass
       pass
-  with Parser(src, s) as p, open(dest, 'w') as dest:
+  with parser.Parser(src, s) as p, open(dest, 'w') as dest:
     while p.advance_second_pass(): # second pass
       ans = c.map(p)
       if ans:

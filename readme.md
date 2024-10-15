@@ -26,7 +26,7 @@ As part of Nand2Tetris Week 6 project, this Assembler is able to convert assembl
 
 1. `git clone https://github.com/ngmysamuel/assembler-n2t.git`
 2. `cd assembler-n2t`
-3. `py Assembler.py <some assembly>.asm <output>.hack`
+3. `py assembler/driver.py <some assembly file>.asm <output file name>.hack`
 
 The assembler will convert the assembly code in \<some assembly\>.asm into binary which will reside in \<output\>.hack
 

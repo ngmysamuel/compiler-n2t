@@ -1,6 +1,4 @@
 class Code:
-  def __init__(self):
-    pass
 
   def map(self, p):
     if p.instr_type == 'L':
