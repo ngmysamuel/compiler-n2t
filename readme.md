@@ -5,11 +5,13 @@
 
 3. [How to run](#how-to-run)
 
-4. [Files](#files)
+4. [How to test](#how-to-test)
 
-5. [Resources](#resources)
+5. [Files](#files)
 
-6. [Other useful links](#other-useful-links)
+6. [Resources](#resources)
+
+7. [Other useful links](#other-useful-links)
 
 # Assembler
 
@@ -26,9 +28,17 @@ As part of Nand2Tetris Week 6 project, this Assembler is able to convert assembl
 
 1. `git clone https://github.com/ngmysamuel/assembler-n2t.git`
 2. `cd assembler-n2t`
-3. `py assembler/driver.py <some assembly file>.asm <output file name>.hack`
+3. `py -m assembly.driver path/to/file.asm path/to/output.hack`
 
-The assembler will convert the assembly code in \<some assembly\>.asm into binary which will reside in \<output\>.hack
+The assembler will convert the assembly code in \<some assembly\>.asm into binary which will reside in \<output\>.hack. For example, `py driver.py ./06/Pong.asm ./06/Pong.hack`
+
+
+I did not name my driver file to be `__main__` as I am importing the package in my tests; hence you'll need to specify the file in step 3.
+
+# How to test
+
+1. `cd assembler-n2t`
+2. `py -m unittest discover -s ./test/` or `py -m unittest test.<test file name>`
 
 # Files
 

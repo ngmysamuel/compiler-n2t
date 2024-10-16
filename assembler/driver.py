@@ -1,6 +1,6 @@
-import parser
-import code
-import symboltable
+import assembler.parser as parser
+import assembler.code as code
+import assembler.symboltable as symboltable
 
 import sys
 

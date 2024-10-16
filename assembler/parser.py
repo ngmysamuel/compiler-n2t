@@ -46,7 +46,7 @@ class Parser:
         self.current_line = ""
         return False # Entire line is a comment
       else:
-        line = line[:position]
+        line = line[:position].strip()
     self.current_line = line
     return False
 
