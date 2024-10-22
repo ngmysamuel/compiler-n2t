@@ -53,7 +53,7 @@ class CodeWriter:
               @SP
               M=M+1
               """
-      elif p.arg3 in ("TEMP", "POINTER", "STATIC"): # PUSH TEMP xxx
+      elif p.arg3 in ("TEMP", "POINTER", "STATIC"): # PUSH TEMP xxx OR PUSH POINTER xxx OR PUSH STATIC xxx
         ans = f"""
               @{p.arg2}
               D=A
@@ -95,14 +95,14 @@ class CodeWriter:
                 A=A-1
                 M=!M
                 """
-      else: # p.arg1 == 2:
+      else: # P.ARG1 == 2:
         op = ""
         match p.arg2:
           case "ADD": # ADD
             op = "M=D+M"
           case "SUB": # SUB
             op = "M=M-D"
-          case "EQ" | "GT" | "LT": # eq, gt, lt
+          case "EQ" | "GT" | "LT": # EQ, GT, LT
             op = f"""
                 D=M-D
                 @EQ.{self.cmp_counter}
