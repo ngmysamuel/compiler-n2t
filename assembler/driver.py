@@ -11,11 +11,11 @@ def assemble(src, dest):
   with parser.Parser(src, s) as p:
     while p.advance_first_pass(): # first pass
       pass
-  with parser.Parser(src, s) as p, open(dest, 'w') as dest:
+  with parser.Parser(src, s) as p, open(dest, 'w') as dest_file:
     while p.advance_second_pass(): # second pass
       ans = c.map(p)
       if ans:
-        dest.write(ans + "\n")
+        dest_file.write(ans + "\n")
 
 def main(src, dest):
   print("Assembler staring from Command Line")

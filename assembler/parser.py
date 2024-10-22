@@ -30,6 +30,7 @@ class Parser:
     return True
   
   def clean_lines(self, line):
+    """Sets the cleaned line into self.current_line. And returns True if its the end of the file, else, False"""
     if not line: # EOF
       self.current_line = ""
       return True
