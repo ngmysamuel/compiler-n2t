@@ -10,7 +10,7 @@ class CodeWriter:
     if p.command_type is None:
       return ans
     elif p.command_type == "C_POP":
-      if p.arg3 in ("TEMP", "POINTER", "STATIC"): # pop temp xxx
+      if p.arg3 in ("TEMP", "POINTER", "STATIC"): # POP TEMP xxx OR POP POINTER xxx OR POP STATIC xxx
         ans = f"""
               @{p.arg2}
               D=A
@@ -26,7 +26,7 @@ class CodeWriter:
               A=M
               M=D
               """
-      else: # pop xxx xxx
+      else: # POP xxx xxx
         ans = f"""
               @{p.arg2}
               D=A
@@ -43,7 +43,7 @@ class CodeWriter:
               M=D
               """
     elif p.command_type == "C_PUSH":
-      if p.arg1 == "CONSTANT": # push constant xxx
+      if p.arg1 == "CONSTANT": # PUSH CONSTANT xxx
         ans = f"""
               @{p.arg2}
               D=A
@@ -53,7 +53,7 @@ class CodeWriter:
               @SP
               M=M+1
               """
-      elif p.arg3 in ("TEMP", "POINTER", "STATIC"): # push temp xxx
+      elif p.arg3 in ("TEMP", "POINTER", "STATIC"): # PUSH TEMP xxx
         ans = f"""
               @{p.arg2}
               D=A
@@ -66,7 +66,7 @@ class CodeWriter:
               @SP
               M=M+1
               """
-      else: # push xxx xxx
+      else: # PUSH xxx xxx
         ans = f"""
               @{p.arg2}
               D=A
@@ -81,14 +81,14 @@ class CodeWriter:
               """
     elif p.command_type == "C_ARITHMETIC":
       if p.arg1 == 1:
-        if p.arg2 == "NEG": # neg
+        if p.arg2 == "NEG": # NEG
           ans = f"""
                 @SP
                 A=M
                 A=A-1
                 M=-M
                 """
-        else: # not
+        else: # NOT
           ans = f"""
                 @SP
                 A=M
@@ -98,9 +98,9 @@ class CodeWriter:
       else: # p.arg1 == 2:
         op = ""
         match p.arg2:
-          case "ADD": # add
+          case "ADD": # ADD
             op = "M=D+M"
-          case "SUB": # sub
+          case "SUB": # SUB
             op = "M=M-D"
           case "EQ" | "GT" | "LT": # eq, gt, lt
             op = f"""
@@ -121,11 +121,11 @@ class CodeWriter:
                 (DN.{self.cmp_counter})
                 """
             self.cmp_counter += 1
-          case "AND": # and
+          case "AND": # AND
             op = f"""
                   M=D&M
                   """
-          case "OR": # or
+          case "OR": # OR
             op = f"""
                   M=D|M
                   """
