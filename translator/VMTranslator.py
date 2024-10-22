@@ -1,5 +1,8 @@
-import parser
-import codewriter
+# import parser
+# import codewriter
+
+import translator.parser as parser
+import translator.codewriter as codewriter
 
 import sys
 

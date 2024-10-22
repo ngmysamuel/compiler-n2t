@@ -38,7 +38,9 @@ I did not name my driver file to be `__main__` as I am importing the package in 
 # How to test
 
 1. `cd assembler-n2t`
-2. `py -m unittest discover -s ./test/` or `py -m unittest test.<test file name>`
+2. `py -m unittest discover -s ./test/assembler` or `py -m unittest test.assembler.<test file name>`
+
+Note \<test file name\> does not contain the file extension.
 
 # Files
 
