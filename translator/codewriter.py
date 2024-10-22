@@ -10,7 +10,7 @@ class CodeWriter:
     if p.command_type is None:
       return ans
     elif p.command_type == "C_POP":
-      if p.arg3 in ("TEMP", "POINTER"): # pop temp xxx
+      if p.arg3 in ("TEMP", "POINTER", "STATIC"): # pop temp xxx
         ans = f"""
               @{p.arg2}
               D=A
@@ -53,7 +53,7 @@ class CodeWriter:
               @SP
               M=M+1
               """
-      elif p.arg3 in ("TEMP", "POINTER"): # push temp xxx
+      elif p.arg3 in ("TEMP", "POINTER", "STATIC"): # push temp xxx
         ans = f"""
               @{p.arg2}
               D=A

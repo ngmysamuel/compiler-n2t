@@ -1,6 +1,8 @@
+import os
+
 class Parser:
 
-  __slots__ = ("path", "src_file", "current_line", "command_type", "arg1", "arg2", "arg3")
+  __slots__ = ("path", "src_file", "file_name", "current_line", "command_type", "arg1", "arg2", "arg3")
 
   def __init__(self, path):
     if ".vm" not in path:
@@ -15,6 +17,7 @@ class Parser:
 
   def __enter__(self):
     self.src_file = open(self.path, "r")
+    self.file_name = os.path.basename(self.src_file.name).replace(".vm", "")
     return self
 
   def __exit__(self, exc_type, exc_value, tb):
@@ -70,6 +73,10 @@ class Parser:
           self.arg1 = "LCL"
         case "ARGUMENT":
           self.arg1 = "ARG"
+        case "STATIC":
+          self.arg1 = f"{self.file_name}.{self.arg2}"
+          self.arg2 = 0
+          self.arg3 = "STATIC"
         case "TEMP":
           self.arg1 = "5"
           self.arg3 = "TEMP"
