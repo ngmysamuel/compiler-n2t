@@ -54,7 +54,9 @@ class TestIntegrationFuncBrn(unittest.TestCase):
 
         cls.arg = os.path.dirname(cls.src_file_sys_name)
         base_name = os.path.basename(cls.dest_file_ans_name)
-        cls.dest_file_name = cls.dest_file_ans_name.replace(base_name, "Temp.asm")
+        cls.dest_file_name = cls.dest_file_ans_name.replace(
+            base_name, f"{os.path.basename(cls.arg)}.asm",
+        )
         return super().setUpClass()
 
     @classmethod
