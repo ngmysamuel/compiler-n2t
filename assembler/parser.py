@@ -1,9 +1,9 @@
-"""Parses assembly code into component parts."""
-
 from assembler import symboltable
 
 
 class Parser:
+    """Parses assembly code into component parts."""
+
     __slots__ = (
         "path",
         "src_file",
@@ -41,7 +41,7 @@ class Parser:
         return self
 
     def __exit__(self, exc_type, exc_value, tb) -> bool:
-        """On exit of the "with" method."""
+        """On exit of the "with" method, cleans up src_file."""
         if exc_type is not None:
             print(exc_type, exc_value, tb)
         self.path = None
@@ -102,8 +102,9 @@ class Parser:
     def advance_second_pass(self) -> bool:
         """Initialize Parser.
 
-        Happens by parsing the asssembly code into different parts such as instruction
-        type, destination, etc and setting that infomation into Parser's attributes.
+        Parses the asssembly code into different parts such as instruction
+        type, destination, etc by checking on the first character of the command.
+        Sets that infomation into Parser's attributes.
         Makes use of the src_file we set on __enter__.
         """
         current_line = self.src_file.readline()

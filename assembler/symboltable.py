@@ -1,6 +1,3 @@
-"""Stores conversion map of symbols into integer (binary)."""
-
-
 class SymbolTable:
     """Dictionary with various helper methods.
 

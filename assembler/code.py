@@ -1,13 +1,13 @@
-"""Outputs binary.
-
-Using the Parser class that was initialized and set in a previous step, it will return
-the relevant binary for that assmbly command
-"""
-
 from assembler import parser
 
 
 class Code:
+    """Outputs binary.
+
+    Using the Parser class that was initialized and set in a previous step, it will
+    return the relevant binary for that assmbly command
+    """
+
     def map(self, p: parser.Parser) -> str:
         """Forms up binary given various pieces of information from the Parser class.
 
