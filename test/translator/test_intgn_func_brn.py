@@ -1,65 +1,77 @@
+import os
 import unittest
 from tempfile import NamedTemporaryFile
-import os
 
 import translator.VMTranslator as vmt
 
+
 class TestIntegrationFuncBrn(unittest.TestCase):
+    """Runs the translator on a VM file and compares.
 
-  @classmethod
-  def setUpClass(cls):
+    Tests Function Calling, Branching, and Directory translation.
+    Creates 3 files:
+        src_file_main: contains the Main.VM code
+        src_file_sys: contains the Main.VM code
+        dest_file_ans: contains the correct assembly code previously tested on the CPU
+        emulator on Nand2Tetris site
+    The last file, dest_file:
+        Its name is derived. It will contain the translated assembly code
+    """
 
-    cls.src_file_main = NamedTemporaryFile(
-      delete=False,
-      mode="w",
-      newline="",
-      prefix="vm_main",
-      suffix=".vm",
-    )
-    cls.src_file_main_name = cls.src_file_main.name
-    cls.src_file_main.write(VM_MAIN)
-    cls.src_file_main.close()
-  
-    cls.src_file_sys = NamedTemporaryFile(
-      delete=False,
-      mode="w",
-      newline="",
-      prefix="vm_sys",
-      suffix=".vm",
-    )
-    cls.src_file_sys_name = cls.src_file_sys.name
-    cls.src_file_sys.write(VM_SYS)
-    cls.src_file_sys.close()
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.src_file_main = NamedTemporaryFile(
+            delete=False,
+            mode="w",
+            newline="",
+            prefix="vm_main",
+            suffix=".vm",
+        )
+        cls.src_file_main_name = cls.src_file_main.name
+        cls.src_file_main.write(VM_MAIN)
+        cls.src_file_main.close()
 
-    cls.dest_file_ans = NamedTemporaryFile(
-      delete=False,
-      mode="w",
-      newline="",
-      suffix=".asm",
-    )
-    cls.dest_file_ans_name = cls.dest_file_ans.name
-    cls.dest_file_ans.write(ASM)
-    cls.dest_file_ans.close()
+        cls.src_file_sys = NamedTemporaryFile(
+            delete=False,
+            mode="w",
+            newline="",
+            prefix="vm_sys",
+            suffix=".vm",
+        )
+        cls.src_file_sys_name = cls.src_file_sys.name
+        cls.src_file_sys.write(VM_SYS)
+        cls.src_file_sys.close()
 
-    cls.arg = os.path.dirname(cls.src_file_sys_name)
-    # print(f"os.path.abspath(cls.dest_file_ans): {os.path.abspath(cls.dest_file_ans)}")
-    base_name = os.path.basename(cls.dest_file_ans_name)
-    cls.dest_file_name = cls.dest_file_ans_name.replace(base_name, f"Temp.asm")
-    return super().setUpClass()
-  
-  @classmethod
-  def tearDownClass(cls):
-      os.remove(cls.src_file_sys_name)
-      os.remove(cls.src_file_main_name)
-      os.remove(cls.dest_file_ans_name)
-      os.remove(cls.dest_file_name)
+        cls.dest_file_ans = NamedTemporaryFile(
+            delete=False,
+            mode="w",
+            newline="",
+            suffix=".asm",
+        )
+        cls.dest_file_ans_name = cls.dest_file_ans.name
+        cls.dest_file_ans.write(ASM)
+        cls.dest_file_ans.close()
 
-  def test_integration(self):
-    vmt.main(self.arg)
-    with open(os.path.join(self.arg, self.dest_file_name), "r") as dest_file, open(self.dest_file_ans_name, "r") as dest_file_ans:
-       self.assertListEqual(list(dest_file), list(dest_file_ans))
+        cls.arg = os.path.dirname(cls.src_file_sys_name)
+        base_name = os.path.basename(cls.dest_file_ans_name)
+        cls.dest_file_name = cls.dest_file_ans_name.replace(
+            base_name, f"{os.path.basename(cls.arg)}.asm",
+        )
+        return super().setUpClass()
 
+    @classmethod
+    def tearDownClass(cls) -> None:
+        os.remove(cls.src_file_sys_name)
+        os.remove(cls.src_file_main_name)
+        os.remove(cls.dest_file_ans_name)
+        os.remove(cls.dest_file_name)
 
+    def test_integration(self) -> None:
+        vmt.main(self.arg)
+        with open(os.path.join(self.arg, self.dest_file_name)) as dest_file, open(
+            self.dest_file_ans_name,
+        ) as dest_file_ans:
+            self.assertListEqual(list(dest_file), list(dest_file_ans))
 
 
 VM_SYS = """// This file is part of www.nand2tetris.org

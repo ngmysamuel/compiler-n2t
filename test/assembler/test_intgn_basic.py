@@ -1,52 +1,55 @@
+import os
 import unittest
 from tempfile import NamedTemporaryFile
-import os
 
-import assembler.driver as driver
+from assembler import driver
 
-class TestIntegration(unittest.TestCase):
 
-  @classmethod
-  def setUpClass(cls):
-    cls.src_file = NamedTemporaryFile(
-      delete=False,
-      mode="w",
-      newline="",
-      suffix=".asm",
-    )
-    cls.src_file_name = cls.src_file.name
-    cls.src_file.write(ASM)
-    cls.src_file.close()
+class TestIntegrationBasic(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.src_file = NamedTemporaryFile(
+            delete=False,
+            mode="w",
+            newline="",
+            suffix=".asm",
+        )
+        cls.src_file_name = cls.src_file.name
+        cls.src_file.write(ASM)
+        cls.src_file.close()
 
-    cls.dest_file = NamedTemporaryFile(
-      delete=False,
-      mode="w",
-      newline="",
-      suffix=".hack",
-    )
-    cls.dest_file_name = cls.dest_file.name
-    cls.dest_file.close()
+        cls.dest_file = NamedTemporaryFile(
+            delete=False,
+            mode="w",
+            newline="",
+            suffix=".hack",
+        )
+        cls.dest_file_name = cls.dest_file.name
+        cls.dest_file.close()
 
-    cls.dest_file_ans = NamedTemporaryFile(
-      delete=False,
-      mode="w",
-      newline="",
-      suffix=".hack",
-    )
-    cls.dest_file_ans_name = cls.dest_file_ans.name
-    cls.dest_file_ans.write(HACK)
-    cls.dest_file_ans.close()
+        cls.dest_file_ans = NamedTemporaryFile(
+            delete=False,
+            mode="w",
+            newline="",
+            suffix=".hack",
+        )
+        cls.dest_file_ans_name = cls.dest_file_ans.name
+        cls.dest_file_ans.write(HACK)
+        cls.dest_file_ans.close()
 
     @classmethod
-    def tearDownClass(cls):
-        os.remove(cls.temp_file_name)
+    def tearDownClass(cls) -> None:
+        os.remove(cls.src_file_name)
         os.remove(cls.dest_file_name)
         os.remove(cls.dest_file_ans_name)
 
-  def test_integration(self):
-    driver.main(self.src_file_name, self.dest_file_name)
-    with open(self.dest_file_name) as dest_file, open(self.dest_file_ans_name) as dest_file_ans:
-      self.assertListEqual(list(dest_file), list(dest_file_ans))
+    def test_integration(self) -> None:
+        driver.main(self.src_file_name, self.dest_file_name)
+        with open(self.dest_file_name) as dest_file, open(
+            self.dest_file_ans_name,
+        ) as dest_file_ans:
+            self.assertListEqual(list(dest_file), list(dest_file_ans))
+
 
 ASM = """// This file is part of www.nand2tetris.org
 // and the book "The Elements of Computing Systems"
