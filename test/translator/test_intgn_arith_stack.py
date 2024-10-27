@@ -1,44 +1,59 @@
+import os
 import unittest
 from tempfile import NamedTemporaryFile
-import os
 
 import translator.VMTranslator as vmt
 
+
 class TestIntegrationArithStack(unittest.TestCase):
-  @classmethod
-  def setUpClass(cls):
-    cls.src_file = NamedTemporaryFile(
-      delete=False,
-      mode="w",
-      newline="",
-      suffix=".vm",
-    )
-    cls.src_file_name = cls.src_file.name
-    cls.src_file.write(VM)
-    cls.src_file.close()
+    """Runs the translator on a VM file and compares.
 
-    cls.dest_file_ans = NamedTemporaryFile(
-      delete=False,
-      mode="w",
-      newline="",
-      suffix=".asm",
-    )
-    cls.dest_file_ans_name = cls.dest_file_ans.name
-    cls.dest_file_ans.write(ASM)
-    cls.dest_file_ans.close()
+    Tests arithmetic, logical, and stack manipulation.
+    Creates 2 files:
+        src_file: contains the VM code
+        dest_file_ans: contains the correct assembly code previously tested on the CPU
+        emulator on Nand2Tetris site
+    The last file, dest_file:
+        Its name is derived. It will contain the translated assembly code
+    """
 
-    cls.dest_file_name = cls.src_file_name.replace(".vm", ".asm")
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.src_file = NamedTemporaryFile(
+            delete=False,
+            mode="w",
+            newline="",
+            suffix=".vm",
+        )
+        cls.src_file_name = cls.src_file.name
+        cls.src_file.write(VM)
+        cls.src_file.close()
 
-  @classmethod
-  def tearDownClass(cls):
-      os.remove(cls.src_file_name)
-      os.remove(cls.dest_file_name)
-      os.remove(cls.dest_file_ans_name)
+        cls.dest_file_ans = NamedTemporaryFile(
+            delete=False,
+            mode="w",
+            newline="",
+            suffix=".asm",
+        )
+        cls.dest_file_ans_name = cls.dest_file_ans.name
+        cls.dest_file_ans.write(ASM)
+        cls.dest_file_ans.close()
 
-  def test_integration(self):
-    vmt.main(self.src_file_name)
-    with open(self.dest_file_name) as dest_file, open(self.dest_file_ans_name) as dest_file_ans:
-      self.assertListEqual(list(dest_file), list(dest_file_ans))
+        cls.dest_file_name = cls.src_file_name.replace(".vm", ".asm")
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        os.remove(cls.src_file_name)
+        os.remove(cls.dest_file_name)
+        os.remove(cls.dest_file_ans_name)
+
+    def test_integration(self) -> None:
+        vmt.main(self.src_file_name)
+        with open(self.dest_file_name) as dest_file, open(
+            self.dest_file_ans_name,
+        ) as dest_file_ans:
+            self.assertListEqual(list(dest_file), list(dest_file_ans))
+
 
 VM = """// This file is part of www.nand2tetris.org
 // and the book "The Elements of Computing Systems"
@@ -447,4 +462,3 @@ A=A-1
 M=D+M
 @SP
 M=M-1"""
-
