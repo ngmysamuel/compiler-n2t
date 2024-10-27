@@ -16,6 +16,7 @@ class Parser:
       files_and_dirs = os.listdir(path)
       files = [os.path.join(path, file) for file in files_and_dirs if file[-3:] == ".vm"]
       if files:
+        files.sort() # for deterministic output
         self.paths = files
       else:
         raise ValueError(f"No VM files found in directory. Please load a file with extension .vm - attempted to load {path}")
@@ -43,6 +44,10 @@ class Parser:
   
   def rotate_file(self):
     if self.src_file_counter < len(self.paths)-1:
+      try:
+        self.src_file.close()
+      except:
+        pass # there's no src_file opened yet; is fine
       self.src_file_counter += 1
       self.src_file = open(self.paths[self.src_file_counter], "r")
       self.file_name = os.path.basename(self.src_file.name).replace(".vm", "").upper()

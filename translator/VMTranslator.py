@@ -15,7 +15,7 @@ def main(src_path):
   print(f"> writing to {dest_path}")
   c = codewriter.CodeWriter()
 
-  # bootstrap code
+  # Bootstrap code
   bootstrap_parser = parser.Parser(src_path)
   bootstrap_parser.current_line = "call Sys.init 0"
   bootstrap_parser.command_type = "C_CALL"
@@ -43,7 +43,7 @@ M=D
 
   print("> bootstrap code written")
 
-  # actual
+  # Actual code
   with parser.Parser(src_path) as p, open(dest_path, 'a') as dest:
     while p.advance():
       ans = c.map(p)
@@ -61,4 +61,4 @@ def strip_lines(ans):
   return ans
 
 if __name__ == "__main__":
-  main(sys.argv[1])
+  main(sys.argv[1]) # TODO: allow for times when no arguments are passed - use current directory

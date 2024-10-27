@@ -28,12 +28,9 @@ As part of Nand2Tetris Week 6 project, this Assembler is able to convert assembl
 
 1. `git clone https://github.com/ngmysamuel/assembler-n2t.git`
 2. `cd assembler-n2t`
-3. `py -m assembly.driver path/to/file.asm path/to/output.hack`
-
-py -m translator.VMTranslator C:\Users\samue\Documents\Nand2Tetris\06-08\08\SimpleFunction\SimpleFunction.vm
+3. `py -m assembly.driver path/to/file.asm path/to/output.hack` OR `py -m translator.VMTranslator path/to/vm`
 
 The assembler will convert the assembly code in \<some assembly\>.asm into binary which will reside in \<output\>.hack. For example, `py driver.py ./06/Pong.asm ./06/Pong.hack`
-
 
 I did not name my driver file to be `__main__` as I am importing the package in my tests; hence you'll need to specify the file in step 3.
 
