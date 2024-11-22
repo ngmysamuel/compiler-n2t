@@ -10,7 +10,10 @@ class JackTokenizer:
     def __init__(self, path):
         self.file = None
         self.file_path = path
-        self.keywords = ["class", "construnctor", "function", "method", ]
+        self.keywords = ["class", "construnctor", "function", "method", "field",
+                         "static", "var", "int", "char", "boolean", "void",
+                         "true", "false", "null", "this", "let", "do", "if",
+                         "else", "while", "return"]
         self.symbols = ["{", "}", "(", ")", "[", "]", ".", ",", ";", "+", "-", "*", "/", "&", "|", ">", "<", "=", "~"]
         self.temp = ""
         self.current_token = ""
@@ -38,6 +41,11 @@ class JackTokenizer:
             if self.one_lookahead != "":
                 self.current_token = self.one_lookahead
                 self.one_lookahead = ""
+                if self.current_token in self.keywords:
+                    self.token_type = "KEYWORD"
+                elif self.current_token in self.symbols:
+                    self.token_type = "SYMBOL"
+                logger.debug(f"self.one_lookahead: {self.one_lookahead}, self.token_type: {self.token_type}")
                 return self.current_token
             ch = self.file.read(1)
             if ch == "":
@@ -79,14 +87,34 @@ class JackTokenizer:
                 self.current_token = self.temp
                 self.one_lookahead = ch if ch != " " else "" # this is for the case where we find game.run(). We are going to return "game" and need to save "." to return. We also need to ignore " "
                 self.temp = ""
-                if is_numeric and not is_alpha:
+                if self.current_token in self.keywords:
+                    self.token_type = "KEYWORD"
+                elif is_numeric and not is_alpha:
                     self.token_type = "INT_CONST"
                 elif is_alpha:
                     self.token_type = "IDENTIFIER"
                 is_numeric = False
                 is_alpha = False
                 return self.current_token
-            if ch.isnumeric():
+            if ch in self.symbols: # character is a symbol and we can return
+                logger.debug("3. current is a symbol, returning")
+                self.token_type = "SYMBOL"
+                self.current_token = ch
+                return self.current_token
+            elif ch == "\"":
+                if is_str_const: # this is the end of a string constant
+                    logger.debug("4a. end of string literal")
+                    self.token_type = "STRING_CONST"
+                    is_str_const = False
+                    self.current_token = self.temp
+                    self.temp = ""
+                    return self.current_token
+                else: # this is the start of a string constant
+                    logger.debug("4b. start of string literal")
+                    is_str_const = True
+            elif is_str_const:
+                self.temp += ch
+            elif ch.isnumeric():
                 is_numeric = True
                 logger.debug(f"8. numeric. adding to {self.temp} + {ch} = {self.temp + ch}")
                 self.temp += ch
@@ -94,21 +122,6 @@ class JackTokenizer:
                 is_alpha = True
                 logger.debug(f"8. alpha. adding to {self.temp} + {ch} = {self.temp + ch}")
                 self.temp += ch
-            elif ch in self.symbols: # character is a symbol and we can return
-                logger.debug("3. current is a symbol, returning")
-                self.token_type = "SYMBOL"
-                self.current_token = ch
-                return self.current_token
-            elif ch == "\"":
-                logger.debug("4. end of string literal")
-                if is_str_const: # this is the end of a string constant
-                    self.token_type = "STRING_CONST"
-                    is_str_const = False
-                    return self.temp
-                else: # this is the start of a string constant
-                    is_str_const = True
-                    self.temp += ch
-            
 
     def is_whitespace(self, ch):
-        return not (ch.isalpha() or ch.isnumeric() or ch in self.symbols)
+        return not (ch.isalpha() or ch.isnumeric() or ch in self.symbols or ch == "\"")

@@ -9,7 +9,7 @@ def main(path, log_level):
         cont = True
         while cont:
             cont = jt.advance()
-            il.logger.info(f"=== return: {cont} ===")
+            il.logger.info(f"=== return: {cont}, type: {jt.token_type} ===")
 
 if __name__ == "__main__":
     main(sys.argv[1], sys.argv[2])
