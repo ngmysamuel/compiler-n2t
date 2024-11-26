@@ -11,7 +11,7 @@ class JackTokenizer:
     def __init__(self, path):
         self.file = None
         self.file_path = path
-        self.keywords = ["class", "construnctor", "function", "method", "field",
+        self.keywords = ["class", "constructor", "function", "method", "field",
                          "static", "var", "int", "char", "boolean", "void",
                          "true", "false", "null", "this", "let", "do", "if",
                          "else", "while", "return"]

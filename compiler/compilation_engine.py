@@ -1,8 +1,4 @@
-# the way we compile "term" is slightly wrong
-# When we try to get the advance token, we set token_type in the jack_tokenizer to the type the advance token is
-# When get to process_token(), we are passing in the current_token and processing it. But the method calls
-# jack_tokenizer for the type which is already of the advance_token's
-# See compile_term(), TokenType.IDENTIFIER branch
+# I have <expression> and <term> unneccessarily
 
 from init_logging import logger
 
@@ -52,11 +48,10 @@ class CompilationEngine:
   def compile_sub_routine_dec(self):
     self.file.write("<subroutineDec>")
     self.process_rule(TokenType.KEYWORD, *[i.value for i in SubRoutineType]) # constructor | function | method
-    self.process_token(TokenType.KEYWORD) # void | type
+    self.process_token("any") # void | type - can be either IDENTIFIER or KEYWORD
     self.process_token(TokenType.IDENTIFIER) # subRoutine name
     self.process_rule(TokenType.SYMBOL, "(")
-    while self.tokenizer.peek() != ")":
-      self.compile_parameter_list()
+    self.compile_parameter_list()
     self.process_rule(TokenType.SYMBOL, ")")
     self.compile_sub_routine_body()
     self.file.write("</subroutineDec>")
@@ -64,7 +59,8 @@ class CompilationEngine:
   def compile_sub_routine_body(self):
     self.file.write("<subroutineBody>")
     self.process_rule(TokenType.SYMBOL, "{")
-    self.compile_var_dec()
+    while self.tokenizer.peek() == "var":
+      self.compile_var_dec()
     self.compile_statments()
     self.process_rule(TokenType.SYMBOL, "}")
     self.file.write("</subroutineBody>")
@@ -75,7 +71,7 @@ class CompilationEngine:
     self.process_token("any") # variable type - can be either IDENTIFIER or KEYWORD
     self.process_token(TokenType.IDENTIFIER) # variable name
     while self.tokenizer.peek() == ",":
-      self.process_token(TokenType.KEYWORD) # variable type
+      self.process_token("any") # variable type
       self.process_token(TokenType.IDENTIFIER) # variable name
     self.process_rule(TokenType.SYMBOL, ";")
     self.file.write("</varDec>")
@@ -155,7 +151,7 @@ class CompilationEngine:
     self.file.write("<expressionList>")
     if self.tokenizer.peek() != ")": # end of expression list
       self.compile_expression()
-      while self.tokenizer.peek() != ",":
+      while self.tokenizer.peek() == ",":
         self.process_rule(TokenType.SYMBOL, ",")
         self.compile_expression()
     self.file.write("</expressionList>")
@@ -207,18 +203,19 @@ class CompilationEngine:
 
   def compile_parameter_list(self):
     self.file.write("<parameterList>")
-    self.process_token(TokenType.KEYWORD) # variable type
-    self.process_token(TokenType.IDENTIFIER) # variable name
-    while self.tokenizer.peek() == ",":
-      self.process_rule(TokenType.SYMBOL, ",")
-      self.process_token(TokenType.KEYWORD)
-      self.process_token(TokenType.IDENTIFIER)
+    while self.tokenizer.peek() != ")":
+      self.process_token("any") # variable type
+      self.process_token(TokenType.IDENTIFIER) # variable name
+      while self.tokenizer.peek() == ",":
+        self.process_rule(TokenType.SYMBOL, ",")
+        self.process_token(TokenType.KEYWORD)
+        self.process_token(TokenType.IDENTIFIER)
     self.file.write("</parameterList>")
 
   def compile_class_var_dec(self):
     self.file.write("<classVarDec>")
     self.process_rule(TokenType.KEYWORD, "static", "field") # static | field
-    self.process_token(TokenType.KEYWORD) # variable type
+    self.process_token("any") # variable type
     self.process_token(TokenType.IDENTIFIER) # variable name
     while self.tokenizer.peek() == ",":
       self.process_rule(TokenType.SYMBOL, ",")
