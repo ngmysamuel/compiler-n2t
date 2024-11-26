@@ -5,6 +5,7 @@
 # 1 lookahead is 1 TOKEN - you need to solve the tokenizing problem first
 
 from init_logging import logger
+from enumerations.TokenType import TokenType
 
 class JackTokenizer:
     def __init__(self, path):
@@ -30,9 +31,15 @@ class JackTokenizer:
         except:
             pass
         finally:
-            logger.info("File is closed")
+            logger.info("Tokenizer is closed")
+
+    def peek(self):
+        current_location = self.file.tell()
+        advance_token = self.advance(True)
+        self.file.seek(current_location)
+        return advance_token
     
-    def advance(self):
+    def advance(self, is_peek):
         is_comment = False
         is_numeric = False
         is_alpha = False
@@ -40,11 +47,11 @@ class JackTokenizer:
         while True:
             if self.one_lookahead != "":
                 self.current_token = self.one_lookahead
-                self.one_lookahead = ""
+                self.one_lookahead = self.current_token if is_peek else "" # peeking destroys the one_lookahead. We cannot have that
                 if self.current_token in self.keywords:
-                    self.token_type = "KEYWORD"
+                    self.token_type = TokenType.KEYWORD # "KEYWORD"
                 elif self.current_token in self.symbols:
-                    self.token_type = "SYMBOL"
+                    self.token_type = TokenType.SYMBOL # "SYMBOL"
                 logger.debug(f"self.one_lookahead: {self.one_lookahead}, self.token_type: {self.token_type}")
                 return self.current_token
             ch = self.file.read(1)
@@ -85,26 +92,28 @@ class JackTokenizer:
             if (self.is_whitespace(ch) or ch in self.symbols) and self.temp != "": # we have reached the end of the current_token and can return it
                 logger.debug("2. end of current token")
                 self.current_token = self.temp
-                self.one_lookahead = ch if ch != " " else "" # this is for the case where we find game.run(). We are going to return "game" and need to save "." to return. We also need to ignore " "
+                if not is_peek and ch != " ": # this is for the case where we find game.run(). We are going to return "game" and need to save "." to return. We also need to ignore " "
+                    self.one_lookahead = ch
+                # self.one_lookahead = ch if ch != " " else "" 
                 self.temp = ""
                 if self.current_token in self.keywords:
-                    self.token_type = "KEYWORD"
+                    self.token_type = TokenType.KEYWORD # "KEYWORD"
                 elif is_numeric and not is_alpha:
-                    self.token_type = "INT_CONST"
+                    self.token_type = TokenType.INT_CONST # "INT_CONST"
                 elif is_alpha:
-                    self.token_type = "IDENTIFIER"
+                    self.token_type = TokenType.IDENTIFIER # "IDENTIFIER"
                 is_numeric = False
                 is_alpha = False
                 return self.current_token
             if ch in self.symbols: # character is a symbol and we can return
                 logger.debug("3. current is a symbol, returning")
-                self.token_type = "SYMBOL"
+                self.token_type = TokenType.SYMBOL # "SYMBOL"
                 self.current_token = ch
                 return self.current_token
             elif ch == "\"":
                 if is_str_const: # this is the end of a string constant
                     logger.debug("4a. end of string literal")
-                    self.token_type = "STRING_CONST"
+                    self.token_type = TokenType.STRING_CONST # "STRING_CONST"
                     is_str_const = False
                     self.current_token = self.temp
                     self.temp = ""
