@@ -1,9 +1,9 @@
 # I have <expression> and <term> unneccessarily
 
-from init_logging import logger
+from compiler.init_logging import logger
 
-from enumerations.TokenType import TokenType
-from enumerations.SubRoutineType import SubRoutineType
+from compiler.enumerations.TokenType import TokenType
+from compiler.enumerations.SubRoutineType import SubRoutineType
 
 class CompilationEngine:
 
@@ -13,6 +13,9 @@ class CompilationEngine:
     self.operator_list = ["+","-","*","/","&","|","<",">","+"]
     self.unary_operator_list = ["-", "~"]
     self.keyword_constant_list = ["true", "false", "null", "this"]
+    self.converted_symbols = {"<": "&lt;", ">": "&gt;", "\"": "&quot;", "&": "&amp;"}
+    self.term_global_counter = 0
+    self.expression_global_counter = 0
 
   def __enter__(self):
     self.file = open(self.path, "w")
@@ -24,7 +27,7 @@ class CompilationEngine:
     except:
       pass
     finally:
-      print("Compilation Engine is closed")
+      logger.debug("Compilation Engine is closed")
 
   def set_tokenizer(self, t):
     self.tokenizer = t
@@ -38,7 +41,7 @@ class CompilationEngine:
     self.process_token(TokenType.IDENTIFIER)
     self.process_rule(TokenType.SYMBOL, "{")
     while self.tokenizer.peek().lower() not in SubRoutineType:
-      print(f"self.tokenizer.peek() not in SubRoutineType: {self.tokenizer.peek() not in SubRoutineType}. peek: {self.tokenizer.peek()}")
+      logger.debug(f"self.tokenizer.peek() not in SubRoutineType: {self.tokenizer.peek() not in SubRoutineType}. peek: {self.tokenizer.peek()}")
       self.compile_class_var_dec()
     while self.tokenizer.peek() != "}":
       self.compile_sub_routine_dec()
@@ -157,6 +160,8 @@ class CompilationEngine:
     self.file.write("</expressionList>")
 
   def compile_term(self, to_print = True):
+    logger.debug(f"{self.expression_global_counter}.{self.term_global_counter}. compile_term()")
+    self.term_global_counter += 1
     if to_print:
       self.file.write("<term>")
     current_token = self.tokenizer.peek()
@@ -195,6 +200,8 @@ class CompilationEngine:
       self.file.write("</term>")
 
   def compile_expression(self, to_print = True):
+    logger.debug(f"{self.expression_global_counter}.{self.term_global_counter} compile_expression()")
+    self.expression_global_counter += 1
     if to_print:
       self.file.write("<expression>")
     self.compile_term(to_print)
@@ -227,18 +234,27 @@ class CompilationEngine:
     self.file.write("</classVarDec>")
 
   def process_rule(self, type, *s):
+    logger.debug("process_rule()")
     current_token = self.tokenizer.advance(False)
     current_type = self.tokenizer.token_type
     if current_token in s and current_type == type:
-      self.file.write(f"<{current_type.value}> {current_token} </{current_type.value}>\n")
+      if current_token in self.converted_symbols:
+        self.file.write(f"<{current_type.value}>{self.converted_symbols[current_token]}</{current_type.value}>\n")
+      else:
+        self.file.write(f"<{current_type.value}> {current_token} </{current_type.value}>\n")
     else:
       raise ValueError(f"Current Token: {current_token}, Current Type: {current_type.name}, Expected Token: {s}, Expected Type: {type.name}")
     return current_token
   
   def process_token(self, type):
-    current_token = self.tokenizer.advance(False)
+    logger.debug("process_token()")
+    current_token = self.tokenizer.advance(False).strip()
     current_type = self.tokenizer.token_type
-    if type == "any" or current_type == type:
+    if current_token in self.converted_symbols:
+      self.file.write(f"<{current_type.value}>{self.converted_symbols[current_token]}</{current_type.value}>\n")
+    elif current_type == TokenType.STRING_CONST:
+      self.file.write(f"<{current_type.value}>{current_token}</{current_type.value}>\n")
+    elif type == "any" or current_type == type:
       self.file.write(f"<{current_type.value}> {current_token} </{current_type.value}>\n")
     else:
       raise ValueError(f"Current Type: {current_type.name}, Expected Type: {type.name}")

@@ -4,8 +4,8 @@
 # Thus, that does not apply to the tokenizer.
 # 1 lookahead is 1 TOKEN - you need to solve the tokenizing problem first
 
-from init_logging import logger
-from enumerations.TokenType import TokenType
+from compiler.init_logging import logger
+from compiler.enumerations.TokenType import TokenType
 
 class JackTokenizer:
     def __init__(self, path):
@@ -34,9 +34,11 @@ class JackTokenizer:
             logger.info("Tokenizer is closed")
 
     def peek(self):
+        logger.debug("+++++++++++ Peeking START +++++++++++")
         current_location = self.file.tell()
         advance_token = self.advance(True)
         self.file.seek(current_location)
+        logger.debug("+++++++++++ Peeking END +++++++++++")
         return advance_token
     
     def advance(self, is_peek):
@@ -45,28 +47,31 @@ class JackTokenizer:
         is_alpha = False
         is_str_const = False
         while True:
-            if self.one_lookahead != "":
+            if self.one_lookahead.strip() != "":
                 self.current_token = self.one_lookahead
                 self.one_lookahead = self.current_token if is_peek else "" # peeking destroys the one_lookahead. We cannot have that
                 if self.current_token in self.keywords:
                     self.token_type = TokenType.KEYWORD # "KEYWORD"
                 elif self.current_token in self.symbols:
                     self.token_type = TokenType.SYMBOL # "SYMBOL"
-                logger.debug(f"self.one_lookahead: {self.one_lookahead}, self.token_type: {self.token_type}")
+                logger.debug(f"self.one_lookahead: >{self.one_lookahead}<, self.token_type: {self.token_type}, is_peek: {is_peek}")
                 return self.current_token
             ch = self.file.read(1)
             if ch == "":
                 break
-            logger.debug(f"====== ch: {ch}, temp: {self.temp}, is_comment: {is_comment} ======")
+            logger.debug(f"====== ch: >{ch}<, temp: >{self.temp}<, is_comment: {is_comment} ======")
             if (self.temp == "/" and ch == "/") or (self.temp == "/" and ch == "*"): # start of a comment
                 logger.debug("start of comment")
                 is_comment = True
                 self.temp = ""
                 continue
-            elif self.temp == "/" and (ch != "/" or ch != "*")  and not is_comment: # we thought it might be a comment but it turns out that its not. So we return the single "/". The current ch will be returned on a subsequent call to this method without moving forward in the file
+            elif self.temp == "/" and (ch != "/" or ch != "*") and not is_str_const and not is_comment: # we thought it might be a comment but it turns out that its not. So we return the single "/". The current ch will be returned on a subsequent call to this method without moving forward in the file
                 logger.debug("1. not actually a comment")
                 self.one_lookahead = ch
-                return self.temp
+                self.current_token = self.temp
+                self.temp = "" # 
+                self.token_type = TokenType.SYMBOL
+                return self.current_token
             if ch == "/" and not is_comment: # potential start of a comment
                 logger.debug("6. potential start of a comment")
                 self.current_token = self.temp
@@ -89,7 +94,7 @@ class JackTokenizer:
                 logger.debug("currently in a comment")
                 self.temp = ""
                 continue
-            if (self.is_whitespace(ch) or ch in self.symbols) and self.temp != "": # we have reached the end of the current_token and can return it
+            if (self.is_whitespace(ch) or ch in self.symbols) and not is_str_const and self.temp != "": # we have reached the end of the current_token and can return it
                 logger.debug("2. end of current token")
                 self.current_token = self.temp
                 if not is_peek and ch != " ": # this is for the case where we find game.run(). We are going to return "game" and need to save "." to return. We also need to ignore " "
