@@ -135,7 +135,7 @@ class CompilationEngine:
   def compile_do_statment(self):
     self.file.write("<doStatement>")
     self.process_rule(TokenType.KEYWORD, "do")
-    self.compile_expression()
+    self.compile_expression(False)
     self.process_rule(TokenType.SYMBOL, ";")
     self.file.write("</doStatement>")
 
@@ -156,8 +156,9 @@ class CompilationEngine:
         self.compile_expression()
     self.file.write("</expressionList>")
 
-  def compile_term(self):
-    self.file.write("<term>")
+  def compile_term(self, to_print = True):
+    if to_print:
+      self.file.write("<term>")
     current_token = self.tokenizer.peek()
     current_type = self.tokenizer.token_type
     if current_type == TokenType.INT_CONST:
@@ -190,16 +191,18 @@ class CompilationEngine:
         self.process_rule(TokenType.SYMBOL, "(")
         self.compile_expression_list()
         self.process_rule(TokenType.SYMBOL, ")")
+    if to_print:
+      self.file.write("</term>")
 
-    self.file.write("</term>")
-
-  def compile_expression(self):
-    self.file.write("<expression>")
-    self.compile_term()
+  def compile_expression(self, to_print = True):
+    if to_print:
+      self.file.write("<expression>")
+    self.compile_term(to_print)
     while self.tokenizer.peek() in self.operator_list:
       self.process_rule(TokenType.SYMBOL, *self.operator_list)
       self.compile_term()
-    self.file.write("</expression>")
+    if to_print:
+      self.file.write("</expression>")
 
   def compile_parameter_list(self):
     self.file.write("<parameterList>")
