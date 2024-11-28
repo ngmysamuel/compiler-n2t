@@ -10,7 +10,7 @@ class CompilationEngine:
   def __init__(self, path):
     self.path = path
     self.tokenizer = None
-    self.operator_list = ["+","-","*","/","&","|","<",">","+"]
+    self.operator_list = ["+","-","*","/","&","|","<",">","="]
     self.unary_operator_list = ["-", "~"]
     self.keyword_constant_list = ["true", "false", "null", "this"]
     self.converted_symbols = {"<": "&lt;", ">": "&gt;", "\"": "&quot;", "&": "&amp;"}
@@ -174,7 +174,7 @@ class CompilationEngine:
       self.process_rule(TokenType.KEYWORD, *self.keyword_constant_list)
     elif current_token == "(": # expression list
       self.process_rule(TokenType.SYMBOL, "(")
-      self.compile_expression_list()
+      self.compile_expression()
       self.process_rule(TokenType.SYMBOL, ")")
     elif current_token in self.unary_operator_list:
       self.process_rule(TokenType.SYMBOL, *self.unary_operator_list)

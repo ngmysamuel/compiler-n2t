@@ -26,3 +26,4 @@ if __name__ == "__main__":
 # py JackAnalyzer.py C:\Users\samue\Documents\Nand2Tetris\06-08_10-11\10\ExpressionLessSquare\Main.jack i .\output.xml
 
 # py -m compiler.JackAnalyzer C:\Users\samue\Documents\Nand2Tetris\06-08_10-11\10\ExpressionLessSquare\Main.jack i .\output.xml
+# py -m unittest test.compiler.test_intgn

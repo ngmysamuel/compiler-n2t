@@ -46,6 +46,7 @@ class JackTokenizer:
         is_numeric = False
         is_alpha = False
         is_str_const = False
+        is_alt_comment = False
         while True:
             if self.one_lookahead.strip() != "":
                 self.current_token = self.one_lookahead
@@ -63,6 +64,7 @@ class JackTokenizer:
             if (self.temp == "/" and ch == "/") or (self.temp == "/" and ch == "*"): # start of a comment
                 logger.debug("start of comment")
                 is_comment = True
+                is_alt_comment = (self.temp == "/" and ch == "*")
                 self.temp = ""
                 continue
             elif self.temp == "/" and (ch != "/" or ch != "*") and not is_str_const and not is_comment: # we thought it might be a comment but it turns out that its not. So we return the single "/". The current ch will be returned on a subsequent call to this method without moving forward in the file
@@ -84,7 +86,7 @@ class JackTokenizer:
                 logger.debug("7. potential end of alt comment")
                 self.temp = "*"
                 continue
-            if is_comment and (ch == "\n" or (self.temp == "*" and ch == "/")): # end of a comment
+            if is_comment and ((ch == "\n" and not is_alt_comment) or (self.temp == "*" and ch == "/" and is_alt_comment)): # end of a comment
                 logger.debug("end of comment")
                 is_comment = False
                 self.temp = ""
