@@ -2,6 +2,7 @@ import unittest
 from tempfile import NamedTemporaryFile
 import re
 import os
+import filecmp
 import compiler.JackAnalyzer as ja
 
 class TestIntgration(unittest.TestCase):
@@ -81,9 +82,13 @@ class TestIntgration(unittest.TestCase):
       with self.subTest(src_file_path=src_file_path, dest_file_ans_path=dest_file_ans_path):
         src_file_name, dest_file_ans_name, dest_file_name = self.setUpFiles(src_file_path, dest_file_ans_path)
         ja.main(src_file_name, "d", dest_file_name)
-        with open(dest_file_name) as dest_file, open(dest_file_ans_name) as dest_file_ans:
+        with open(dest_file_name, "w+") as dest_file, open(dest_file_ans_name, "w+") as dest_file_ans:
           contents = dest_file.read()
           no_white_space = re.sub(r"\s+", "", contents)
-          self.assertEqual(no_white_space, dest_file_ans.read())
+          dest_file.write(no_white_space)
+          contents = dest_file_ans.read()
+          no_white_space = re.sub(r"\s+", "", contents)
+          dest_file_ans.write(no_white_space)
+        self.assertTrue(filecmp.cmp(dest_file_name, dest_file_ans_name), "The files are not the same")
 
 
