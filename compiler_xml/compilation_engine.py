@@ -1,9 +1,9 @@
 # I have <expression> and <term> unneccessarily
 
-from compiler.init_logging import logger
+from compiler_xml.init_logging import logger
 
-from compiler.enumerations.TokenType import TokenType
-from compiler.enumerations.SubRoutineType import SubRoutineType
+from compiler_xml.enumerations.TokenType import TokenType
+from compiler_xml.enumerations.SubRoutineType import SubRoutineType
 
 class CompilationEngine:
 

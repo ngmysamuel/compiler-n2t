@@ -4,8 +4,8 @@
 # Thus, that does not apply to the tokenizer.
 # 1 lookahead is 1 TOKEN - you need to solve the tokenizing problem first
 
-from compiler.init_logging import logger
-from compiler.enumerations.TokenType import TokenType
+from compiler_xml.init_logging import logger
+from compiler_xml.enumerations.TokenType import TokenType
 
 class JackTokenizer:
     def __init__(self, path):

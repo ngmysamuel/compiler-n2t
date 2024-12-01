@@ -3,7 +3,7 @@ from tempfile import NamedTemporaryFile
 import re
 import os
 import filecmp
-import compiler.JackAnalyzer as ja
+import compiler_xml.JackAnalyzer as ja
 
 class TestIntgration(unittest.TestCase):
 

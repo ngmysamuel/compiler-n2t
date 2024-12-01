@@ -1,9 +1,9 @@
 import sys
-from compiler import init_logging as il
+from compiler_xml import init_logging as il
 
-from compiler.jack_tokenizer import JackTokenizer
-from compiler.compilation_engine import CompilationEngine
-from compiler.enumerations.SubRoutineType import SubRoutineType
+from compiler_xml.jack_tokenizer import JackTokenizer
+from compiler_xml.compilation_engine import CompilationEngine
+from compiler_xml.enumerations.SubRoutineType import SubRoutineType
 
 def main(path, log_level, dest_path):
     print(f"path: {path}\nlog_level: {log_level}\ndest_path: {dest_path}")
