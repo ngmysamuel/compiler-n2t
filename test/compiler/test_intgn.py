@@ -4,7 +4,6 @@ import re
 import os
 import filecmp
 import compiler.JackAnalyzer as ja
-from test import PROJECT_DIR
 
 class TestIntgration(unittest.TestCase):
 
@@ -51,32 +50,32 @@ class TestIntgration(unittest.TestCase):
   def test_integration(self):
     files_to_test = [
       (
-        f"{PROJECT_DIR}/10/ExpressionLessSquare/Main.jack",
-        f"{PROJECT_DIR}/10/ExpressionLessSquare/Main.xml"
+        "./10/ExpressionLessSquare/Main.jack",
+        "./10/ExpressionLessSquare/Main.xml"
       ),
       (
-        f"{PROJECT_DIR}/10/ExpressionLessSquare/Square.jack",
-        f"{PROJECT_DIR}/10/ExpressionLessSquare/Square.xml"
+        "./10/ExpressionLessSquare/Square.jack",
+        "./10/ExpressionLessSquare/Square.xml"
       ),
       (
-        f"{PROJECT_DIR}/10/ExpressionLessSquare/SquareGame.jack",
-        f"{PROJECT_DIR}/10/ExpressionLessSquare/SquareGame.xml"
+        "./10/ExpressionLessSquare/SquareGame.jack",
+        "./10/ExpressionLessSquare/SquareGame.xml"
       ),
       (
-        f"{PROJECT_DIR}/10/ArrayTest/Main.jack",
-        f"{PROJECT_DIR}/10/ArrayTest/Main.xml"
+        "./10/ArrayTest/Main.jack",
+        "./10/ArrayTest/Main.xml"
       ),
       (
-        f"{PROJECT_DIR}/10/Square/Main.jack",
-        f"{PROJECT_DIR}/10/Square/Main.xml"
+        "./10/Square/Main.jack",
+        "./10/Square/Main.xml"
       ),
       (
-        f"{PROJECT_DIR}/10/Square/Square.jack",
-        f"{PROJECT_DIR}/10/Square/Square.xml"
+        "./10/Square/Square.jack",
+        "./10/Square/Square.xml"
       ),
       (
-        f"{PROJECT_DIR}/10/Square/SquareGame.jack",
-        f"{PROJECT_DIR}/10/Square/SquareGame.xml"
+        "./10/Square/SquareGame.jack",
+        "./10/Square/SquareGame.xml"
       )
       ]
     for src_file_path, dest_file_ans_path in files_to_test:
