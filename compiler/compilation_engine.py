@@ -24,7 +24,7 @@ class CompilationEngine:
     self.class_name = None
     self.class_var_config = {}
     self.subroutine_config = {}
-    self.operator = None
+    self.operator = {}
     self.if_count = 0
     self.whilte_count = 0
 
@@ -210,8 +210,15 @@ class CompilationEngine:
       logger.debug("<expression>")
     self.compile_term(to_print)
     while self.tokenizer.peek() in self.operator_list:
-      self.operator = self.process_rule(TokenType.SYMBOL, *self.operator_list)
+      self.operator[len(self.operator) + 1] = self.process_rule(TokenType.SYMBOL, *self.operator_list)
       self.compile_term()
+    while len(self.operator) > 0:
+      self.process_operator(
+        self.operator.pop(
+          len(self.operator)
+          )
+        )
+
     if to_print:
       logger.debug("</expression>")
 
@@ -225,9 +232,6 @@ class CompilationEngine:
     if current_type == TokenType.INT_CONST:
       int_const = self.process_token(TokenType.INT_CONST)
       self.writer.write_push(SegmentTypes.CONSTANT.value, int_const)
-      if self.operator is not None:
-        self.push_operator(self.operator)
-        self.operator = None
     elif current_type == TokenType.STRING_CONST:
       string_const = self.process_token(TokenType.STRING_CONST)
       self.writer.write_push(SegmentTypes.CONSTANT.value, len(string_const))
@@ -250,7 +254,7 @@ class CompilationEngine:
       self.process_rule(TokenType.SYMBOL, ")")
     elif current_token in self.unary_operator_list:
       unary_op = self.process_rule(TokenType.SYMBOL, *self.unary_operator_list)
-      self.push_unary_operator(unary_op)
+      self.process_unary_operator(unary_op)
       self.compile_term()
     elif current_type == TokenType.IDENTIFIER:
       self.process_token(TokenType.IDENTIFIER)
@@ -340,7 +344,7 @@ class CompilationEngine:
     # self.operator_list = ["+","-","*","/","&","|","<",">","="]
     # self.unary_operator_list = ["-", "~"]
 
-  def push_operator(self, op):
+  def process_operator(self, op):
     match op:
       case "+":
         self.writer.write_arithmetic("add")
@@ -361,7 +365,7 @@ class CompilationEngine:
       case "=":
         self.writer.write_arithmetic("eq")
 
-  def push_unary_operator(self, op):
+  def process_unary_operator(self, op):
     match op:
       case "-":
         self.writer.write_arithmetic("neg")
