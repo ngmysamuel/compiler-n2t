@@ -274,8 +274,8 @@ class CompilationEngine:
       elif advance_token == ".": # is a method on an external class
         variable_to_call = current_token
         self.process_rule(TokenType.SYMBOL, ".")
-        self.process_token(TokenType.IDENTIFIER)
-        subroutine_to_call = self.process_rule(TokenType.SYMBOL, "(")
+        subroutine_to_call = self.process_token(TokenType.IDENTIFIER)
+        self.process_rule(TokenType.SYMBOL, "(")
         arg_count = self.compile_expression_list()
         class_type, class_kind, class_index = self.resolve_class_type_to_call(variable_to_call)
         if class_index > -1:
