@@ -26,7 +26,7 @@ class CompilationEngine:
     self.subroutine_config = {}
     self.operator = {}
     self.if_count = 0
-    self.whilte_count = 0
+    self.while_count = 0
 
   def set_tokenizer(self, t):
     self.tokenizer = t
@@ -43,6 +43,7 @@ class CompilationEngine:
       self.compile_class_var_dec()
     while self.tokenizer.peek() != "}":
       self.compile_sub_routine_dec()
+      self.subroutine_symbol_table.reset()
     self.process_rule(TokenType.SYMBOL, "}")
 
   def compile_sub_routine_dec(self):
@@ -68,7 +69,7 @@ class CompilationEngine:
     logger.debug("</subroutineBody>")
 
   def write_subroutine_signature(self):
-    self.writer.write_function(f"{self.class_name}.{self.subroutine_config['name']}", self.subroutine_symbol_table.var_count(SymbolKind.VAR.value))
+    self.writer.write_function(f"{self.class_name}.{self.subroutine_config['name']}", self.subroutine_symbol_table.var_count(SegmentTypes.LOCAL.value))
     if self.subroutine_config["type"] == SubRoutineType.METHOD.value:
       self.writer.write_push(SegmentTypes.ARGUMENT.value, 0) # push argument 0
       self.write.write_pop(SegmentTypes.POINTER, 0) # pop pointer 0 -> set THIS
@@ -83,11 +84,13 @@ class CompilationEngine:
     self.process_rule(TokenType.KEYWORD, "var")
     var_type = self.process_token("any") # variable type - can be either IDENTIFIER or KEYWORD
     var_name = self.process_token(TokenType.IDENTIFIER) # variable name
-    self.subroutine_symbol_table.define(var_name, var_type, SymbolKind.VAR)
+    self.subroutine_symbol_table.define(var_name, var_type, SegmentTypes.LOCAL.value)
+    logger.debug(f"Subroutine defined - var_name: {var_name}, var_type: {var_type}")
     while self.tokenizer.peek() == ",":
       var_type = self.process_token("any") # variable type
-      var_type = self.process_token(TokenType.IDENTIFIER) # variable name
-      self.subroutine_symbol_table.define(var_name, var_type, SymbolKind.VAR)
+      var_name = self.process_token(TokenType.IDENTIFIER) # variable name
+      self.subroutine_symbol_table.define(var_name, var_type, SegmentTypes.LOCAL.value)
+      logger.debug(f"Subroutine defined - var_name: {var_name}, var_type: {var_type}")
     self.process_rule(TokenType.SYMBOL, ";")
     logger.debug("</varDec>")
 
@@ -114,8 +117,6 @@ class CompilationEngine:
     var_name = self.process_token(TokenType.IDENTIFIER)
     var_kind = self.subroutine_symbol_table.kind_of(var_name)
     var_idx = self.subroutine_symbol_table.index_of(var_name)
-    _, class_kind, class_index = self.resolve_class_type_to_call(var_name)
-    self.writer.write_push(class_kind, class_index)
     if self.tokenizer.peek() == "[": # LHS array
       self.process_rule(TokenType.SYMBOL, "[")
       self.compile_expression()
@@ -140,37 +141,38 @@ class CompilationEngine:
     self.process_rule(TokenType.SYMBOL, "(")
     self.compile_expression()
     self.writer.write_arithmetic("not")
-    self.writer.write_if(f"{self.class_name}.{self.subroutine_config["name"]}.{self.if_count}.pathA") # go if not true
+    self.writer.write_if(f"{self.class_name}.{self.subroutine_config["name"]}.if_{self.if_count}.pathA") # go if not true
     self.process_rule(TokenType.SYMBOL, ")")
     self.process_rule(TokenType.SYMBOL, "{")
     self.compile_statments()
-    self.writer.write_goto(f"{self.class_name}.{self.subroutine_config["name"]}.{self.if_count}.pathB") # skip statements for if not true
+    self.writer.write_goto(f"{self.class_name}.{self.subroutine_config["name"]}.if_{self.if_count}.pathB") # skip statements for if not true
     self.process_rule(TokenType.SYMBOL, "}")
     if self.tokenizer.peek() == "else":
       self.process_rule(TokenType.KEYWORD, "else")
       self.process_rule(TokenType.SYMBOL, "{")
-      self.writer.write_label(f"{self.class_name}.{self.subroutine_config["name"]}.{self.if_count}.pathA")
+      self.writer.write_label(f"{self.class_name}.{self.subroutine_config["name"]}.if_{self.if_count}.pathA")
       self.compile_statments()
       self.process_rule(TokenType.SYMBOL, "}")
-    self.writer.write_label(f"{self.class_name}.{self.subroutine_config["name"]}.{self.if_count}.pathB")
+    self.writer.write_label(f"{self.class_name}.{self.subroutine_config["name"]}.if_{self.if_count}.pathB")
     logger.debug("</ifStatement>")
     self.if_count += 1
 
   def compile_while_statment(self):
     logger.debug("<whileStatement>")
-    self.writer.write_label(f"{self.class_name}.{self.subroutine_config["name"]}.{self.if_count}.pathA") # top
+    self.writer.write_label(f"{self.class_name}.{self.subroutine_config["name"]}.while_{self.while_count}.pathA") # top
     self.process_rule(TokenType.KEYWORD, "while")
     self.process_rule(TokenType.SYMBOL, "(")
     self.compile_expression()
     self.writer.write_arithmetic("not")
-    self.writer.write_if(f"{self.class_name}.{self.subroutine_config["name"]}.{self.if_count}.pathB") # break
+    self.writer.write_if(f"{self.class_name}.{self.subroutine_config["name"]}.while_{self.while_count}.pathB") # break
     self.process_rule(TokenType.SYMBOL, ")")
     self.process_rule(TokenType.SYMBOL, "{")
     self.compile_statments()
-    self.writer.write_goto(f"{self.class_name}.{self.subroutine_config["name"]}.{self.if_count}.pathA") # back to top
+    self.writer.write_goto(f"{self.class_name}.{self.subroutine_config["name"]}.while_{self.while_count}.pathA") # back to top
     self.process_rule(TokenType.SYMBOL, "}")
-    self.writer.write_label(f"{self.class_name}.{self.subroutine_config["name"]}.{self.if_count}.pathB") # break label
+    self.writer.write_label(f"{self.class_name}.{self.subroutine_config["name"]}.while_{self.while_count}.pathB") # break label
     logger.debug("</whileStatement>")
+    self.while_count += 1
 
   def compile_do_statment(self):
     logger.debug("<doStatement>")
@@ -254,8 +256,8 @@ class CompilationEngine:
       self.process_rule(TokenType.SYMBOL, ")")
     elif current_token in self.unary_operator_list:
       unary_op = self.process_rule(TokenType.SYMBOL, *self.unary_operator_list)
-      self.process_unary_operator(unary_op)
       self.compile_term()
+      self.process_unary_operator(unary_op)
     elif current_type == TokenType.IDENTIFIER:
       self.process_token(TokenType.IDENTIFIER)
       advance_token = self.tokenizer.peek()
@@ -287,6 +289,9 @@ class CompilationEngine:
           arg_count += 1
         self.writer.write_call(f"{class_type}.{subroutine_to_call}", arg_count)
         self.process_rule(TokenType.SYMBOL, ")")
+      else:
+        class_type, class_kind, class_index = self.resolve_class_type_to_call(current_token)
+        self.writer.write_push(class_kind, class_index)
     if to_print:
       logger.debug("</term>")
 

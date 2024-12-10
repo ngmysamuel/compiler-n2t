@@ -3,5 +3,5 @@ from enum import Enum
 class SymbolKind(Enum):
   STATIC = "static"
   FIELD = "field"
-  ARG = "arg"
+  ARG = "argument"
   VAR = "var"
