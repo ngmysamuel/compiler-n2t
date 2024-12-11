@@ -54,9 +54,9 @@ class SquareGame {
             let key = Keyboard.keyPressed();
             do moveSquare();
          }
-         if (key = 81)  { let exit = true; }     // q key
-         if (key = 90)  { do square.decSize(); } // z key
-         if (key = 88)  { do square.incSize(); } // x key
+         if (key = 113)  { let exit = true; }     // q key
+         if (key = 122)  { do square.decSize(); } // z key
+         if (key = 120)  { do square.incSize(); } // x key
          if (key = 131) { let direction = 1; }   // up arrow
          if (key = 133) { let direction = 2; }   // down arrow
          if (key = 130) { let direction = 3; }   // left arrow

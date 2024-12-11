@@ -19,11 +19,3 @@ def main(path, log_level, dest_path):
 
 if __name__ == "__main__":
     main(sys.argv[1], sys.argv[2], sys.argv[3])
-
-
-# cd C:\Users\samue\Documents\Nand2Tetris\06-08_10-11
-# py -m compiler.JackAnalyzer C:\Users\samue\Documents\Nand2Tetris\06-08_10-11\11\Seven\Main.jack d .\output.vm
-# py -m compiler.JackAnalyzer C:\Users\samue\Documents\Nand2Tetris\06-08_10-11\11\ConvertToBin\Main.jack d output.vm
-
-# py -m compiler.JackAnalyzer C:\Users\samue\Documents\Nand2Tetris\06-08_10-11\10\ExpressionLessSquare\Main.jack i .\output.xml
-# py -m unittest test.compiler.test_intgn
