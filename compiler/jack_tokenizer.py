@@ -112,7 +112,7 @@ class JackTokenizer:
                 is_numeric = False
                 is_alpha = False
                 return self.current_token
-            if ch in self.symbols: # character is a symbol and we can return
+            if ch in self.symbols and not is_str_const: # character is a symbol and we can return
                 logger.debug("3. current is a symbol, returning")
                 self.token_type = TokenType.SYMBOL # "SYMBOL"
                 self.current_token = ch
