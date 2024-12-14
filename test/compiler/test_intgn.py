@@ -17,13 +17,21 @@ class TestIntegration(unittest.TestCase):
       suffix=".vm",
     )
     output_file_name = output_file.name
-    self.file_list.append(output_file_name)
-    return output_file_name
+    temp_ans_file = NamedTemporaryFile(
+      delete = False,
+      mode="w",
+      newline="",
+      suffix=".vm",
+    )
+    temp_ans_file_name = temp_ans_file.name
+    self.file_list.append((output_file_name, temp_ans_file_name))
+    return output_file_name, temp_ans_file_name
   
   @classmethod
   def tear_down_class(cls):
-    for i in cls.file_list:
+    for i, j in cls.file_list:
       os.remove(i)
+      os.remove(j)
 
   def test_integration(self):
     files_to_test = [
@@ -41,14 +49,14 @@ class TestIntegration(unittest.TestCase):
     ]
     for input_path, log_level, ans_path in files_to_test:
       with self.subTest(input_path=input_path, log_level=log_level, ans_path=ans_path):
-        output = self.setup()
+        output, temp_ans = self.setup()
         JackAnalyzer.main(input_path, log_level, output)
         with open(output, "r") as output_file, open(ans_path, "r") as ans_file:
           contents = output_file.read()
           cleaned_output = re.sub(r"\s+", "", contents)
           contents = ans_file.read()
           cleaned_ans = re.sub(r"\s+", "", contents)
-        with open(output, "w") as output_file, open(ans_path, "w") as ans_file:
+        with open(output, "w") as output_file, open(temp_ans, "w") as temp_ans_file:
           output_file.write(cleaned_output)
-          ans_file.write(cleaned_ans)
-        self.assertTrue(filecmp.cmp(output, ans_path), "The files are not the same")
+          temp_ans_file.write(cleaned_ans)
+        self.assertTrue(filecmp.cmp(output, temp_ans), "The files are not the same")

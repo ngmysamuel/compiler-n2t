@@ -1,1 +1,13 @@
-functionMain.main1callPongGame.newInstance0poptemp0callPongGame.getInstance0poplocal0pushlocal0callPongGame.run1poptemp0pushlocal0callPongGame.dispose1poptemp0pushconstant0return
+function Main.main 1
+call PongGame.newInstance 0
+pop temp 0
+call PongGame.getInstance 0
+pop local 0
+push local 0
+call PongGame.run 1
+pop temp 0
+push local 0
+call PongGame.dispose 1
+pop temp 0
+push constant 0
+return

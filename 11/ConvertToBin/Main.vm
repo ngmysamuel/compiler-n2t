@@ -1,1 +1,106 @@
-functionMain.main1pushconstant8001pushconstant16pushconstant1negcallMain.fillMemory3poptemp0pushconstant8000callMemory.peek1poplocal0pushlocal0callMain.convert1poptemp0pushconstant0returnfunctionMain.convert3pushconstant1negpoplocal2labelMain.convert.while_1.pathApushlocal2notif-gotoMain.convert.while_1.pathBpushlocal1pushconstant1addpoplocal1pushlocal0callMain.nextMask1poplocal0pushlocal1pushconstant16gtnotnotif-gotoMain.convert.if_1.pathApushargument0pushlocal0andpushconstant0eqnotnotif-gotoMain.convert.if_2.pathApushconstant8000pushlocal1addpushconstant1callMemory.poke2poptemp0gotoMain.convert.if_2.pathBlabelMain.convert.if_2.pathApushconstant8000pushlocal1addpushconstant0callMemory.poke2poptemp0labelMain.convert.if_2.pathBgotoMain.convert.if_1.pathBlabelMain.convert.if_1.pathApushconstant0poplocal2labelMain.convert.if_1.pathBgotoMain.convert.while_1.pathAlabelMain.convert.while_1.pathBpushconstant0returnfunctionMain.nextMask0pushargument0pushconstant0eqnotif-gotoMain.nextMask.if_1.pathApushconstant1returngotoMain.nextMask.if_1.pathBlabelMain.nextMask.if_1.pathApushargument0pushconstant2callMath.multiply2returnlabelMain.nextMask.if_1.pathBfunctionMain.fillMemory0labelMain.fillMemory.while_1.pathApushargument1pushconstant0gtnotif-gotoMain.fillMemory.while_1.pathBpushargument0pushargument2callMemory.poke2poptemp0pushargument1pushconstant1subpopargument1pushargument0pushconstant1addpopargument0gotoMain.fillMemory.while_1.pathAlabelMain.fillMemory.while_1.pathBpushconstant0return
+function Main.main 1
+push constant 8001
+push constant 16
+push constant 1
+neg
+call Main.fillMemory 3
+pop temp 0
+push constant 8000
+call Memory.peek 1
+pop local 0
+push local 0
+call Main.convert 1
+pop temp 0
+push constant 0
+return
+function Main.convert 3
+push constant 1
+neg
+pop local 2
+label Main.convert.while_1.pathA
+push local 2
+not
+if-goto Main.convert.while_1.pathB
+push local 1
+push constant 1
+add
+pop local 1
+push local 0
+call Main.nextMask 1
+pop local 0
+push local 1
+push constant 16
+gt
+not
+not
+if-goto Main.convert.if_1.pathA
+push argument 0
+push local 0
+and
+push constant 0
+eq
+not
+not
+if-goto Main.convert.if_2.pathA
+push constant 8000
+push local 1
+add
+push constant 1
+call Memory.poke 2
+pop temp 0
+goto Main.convert.if_2.pathB
+label Main.convert.if_2.pathA
+push constant 8000
+push local 1
+add
+push constant 0
+call Memory.poke 2
+pop temp 0
+label Main.convert.if_2.pathB
+goto Main.convert.if_1.pathB
+label Main.convert.if_1.pathA
+push constant 0
+pop local 2
+label Main.convert.if_1.pathB
+goto Main.convert.while_1.pathA
+label Main.convert.while_1.pathB
+push constant 0
+return
+function Main.nextMask 0
+push argument 0
+push constant 0
+eq
+not
+if-goto Main.nextMask.if_1.pathA
+push constant 1
+return
+goto Main.nextMask.if_1.pathB
+label Main.nextMask.if_1.pathA
+push argument 0
+push constant 2
+call Math.multiply 2
+return
+label Main.nextMask.if_1.pathB
+function Main.fillMemory 0
+label Main.fillMemory.while_1.pathA
+push argument 1
+push constant 0
+gt
+not
+if-goto Main.fillMemory.while_1.pathB
+push argument 0
+push argument 2
+call Memory.poke 2
+pop temp 0
+push argument 1
+push constant 1
+sub
+pop argument 1
+push argument 0
+push constant 1
+add
+pop argument 0
+goto Main.fillMemory.while_1.pathA
+label Main.fillMemory.while_1.pathB
+push constant 0
+return

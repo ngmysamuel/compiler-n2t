@@ -1,1 +1,435 @@
-functionBall.new0pushconstant15callMemory.alloc1poppointer0pushargument0popthis0pushargument1popthis1pushargument2popthis10pushargument3pushconstant6subpopthis11pushargument4popthis12pushargument5pushconstant6subpopthis13pushconstant0popthis14pushpointer0callBall.show1poptemp0pushpointer0returnfunctionBall.dispose0pushargument0poppointer0pushpointer0callMemory.deAlloc1poptemp0pushconstant0returnfunctionBall.show0pushargument0poppointer0pushconstant1negcallScreen.setColor1poptemp0pushpointer0callBall.draw1poptemp0pushconstant0returnfunctionBall.hide0pushargument0poppointer0pushconstant0callScreen.setColor1poptemp0pushpointer0callBall.draw1poptemp0pushconstant0returnfunctionBall.draw0pushargument0poppointer0pushthis0pushthis1pushthis0pushconstant5addpushthis1pushconstant5addcallScreen.drawRectangle4poptemp0pushconstant0returnfunctionBall.getLeft0pushargument0poppointer0pushthis0returnfunctionBall.getRight0pushargument0poppointer0pushthis0pushconstant5addreturnfunctionBall.setDestination3pushargument0poppointer0pushargument1pushthis0subpopthis2pushargument2pushthis1subpopthis3pushthis2callMath.abs1poplocal0pushthis3callMath.abs1poplocal1pushlocal0pushlocal1ltpopthis7pushthis7notif-gotoBall.setDestination.if_1.pathApushlocal0poplocal2pushlocal1poplocal0pushlocal2poplocal1pushthis1pushargument2ltpopthis8pushthis0pushargument1ltpopthis9gotoBall.setDestination.if_1.pathBlabelBall.setDestination.if_1.pathApushthis0pushargument1ltpopthis8pushthis1pushargument2ltpopthis9labelBall.setDestination.if_1.pathBpushconstant2pushlocal1callMath.multiply2pushlocal0subpopthis4pushconstant2pushlocal1callMath.multiply2popthis5pushconstant2pushlocal1pushlocal0subcallMath.multiply2popthis6pushconstant0returnfunctionBall.move0pushargument0poppointer0pushpointer0callBall.hide1poptemp0pushthis4pushconstant0ltnotif-gotoBall.move.if_1.pathApushthis4pushthis5addpopthis4gotoBall.move.if_1.pathBlabelBall.move.if_1.pathApushthis4pushthis6addpopthis4pushthis9notif-gotoBall.move.if_2.pathApushthis7notif-gotoBall.move.if_3.pathApushthis0pushconstant4addpopthis0gotoBall.move.if_3.pathBlabelBall.move.if_3.pathApushthis1pushconstant4addpopthis1labelBall.move.if_3.pathBgotoBall.move.if_2.pathBlabelBall.move.if_2.pathApushthis7notif-gotoBall.move.if_4.pathApushthis0pushconstant4subpopthis0gotoBall.move.if_4.pathBlabelBall.move.if_4.pathApushthis1pushconstant4subpopthis1labelBall.move.if_4.pathBlabelBall.move.if_2.pathBlabelBall.move.if_1.pathBpushthis8notif-gotoBall.move.if_5.pathApushthis7notif-gotoBall.move.if_6.pathApushthis1pushconstant4addpopthis1gotoBall.move.if_6.pathBlabelBall.move.if_6.pathApushthis0pushconstant4addpopthis0labelBall.move.if_6.pathBgotoBall.move.if_5.pathBlabelBall.move.if_5.pathApushthis7notif-gotoBall.move.if_7.pathApushthis1pushconstant4subpopthis1gotoBall.move.if_7.pathBlabelBall.move.if_7.pathApushthis0pushconstant4subpopthis0labelBall.move.if_7.pathBlabelBall.move.if_5.pathBpushthis0pushthis10gtnotnotif-gotoBall.move.if_8.pathApushconstant1popthis14pushthis10popthis0gotoBall.move.if_8.pathBlabelBall.move.if_8.pathAlabelBall.move.if_8.pathBpushthis0pushthis11ltnotnotif-gotoBall.move.if_9.pathApushconstant2popthis14pushthis11popthis0gotoBall.move.if_9.pathBlabelBall.move.if_9.pathAlabelBall.move.if_9.pathBpushthis1pushthis12gtnotnotif-gotoBall.move.if_10.pathApushconstant3popthis14pushthis12popthis1gotoBall.move.if_10.pathBlabelBall.move.if_10.pathAlabelBall.move.if_10.pathBpushthis1pushthis13ltnotnotif-gotoBall.move.if_11.pathApushconstant4popthis14pushthis13popthis1gotoBall.move.if_11.pathBlabelBall.move.if_11.pathAlabelBall.move.if_11.pathBpushpointer0callBall.show1poptemp0pushthis14returnfunctionBall.bounce5pushargument0poppointer0pushthis2pushconstant10callMath.divide2poplocal2pushthis3pushconstant10callMath.divide2poplocal3pushargument1pushconstant0eqnotif-gotoBall.bounce.if_1.pathApushconstant10poplocal4gotoBall.bounce.if_1.pathBlabelBall.bounce.if_1.pathApushthis2pushconstant0ltnotpushargument1pushconstant1eqandpushthis2pushconstant0ltpushargument1pushconstant1negeqandornotif-gotoBall.bounce.if_2.pathApushconstant20poplocal4gotoBall.bounce.if_2.pathBlabelBall.bounce.if_2.pathApushconstant5poplocal4labelBall.bounce.if_2.pathBlabelBall.bounce.if_1.pathBpushthis14pushconstant1eqnotif-gotoBall.bounce.if_3.pathApushconstant506poplocal0pushlocal3pushconstant50negcallMath.multiply2pushlocal2callMath.divide2poplocal1pushthis1pushlocal1pushlocal4callMath.multiply2addpoplocal1gotoBall.bounce.if_3.pathBlabelBall.bounce.if_3.pathApushthis14pushconstant2eqnotif-gotoBall.bounce.if_4.pathApushconstant0poplocal0pushlocal3pushconstant50callMath.multiply2pushlocal2callMath.divide2poplocal1pushthis1pushlocal1pushlocal4callMath.multiply2addpoplocal1gotoBall.bounce.if_4.pathBlabelBall.bounce.if_4.pathApushthis14pushconstant3eqnotif-gotoBall.bounce.if_5.pathApushconstant250poplocal1pushlocal2pushconstant25negcallMath.multiply2pushlocal3callMath.divide2poplocal0pushthis0pushlocal0pushlocal4callMath.multiply2addpoplocal0gotoBall.bounce.if_5.pathBlabelBall.bounce.if_5.pathApushconstant0poplocal1pushlocal2pushconstant25callMath.multiply2pushlocal3callMath.divide2poplocal0pushthis0pushlocal0pushlocal4callMath.multiply2addpoplocal0labelBall.bounce.if_5.pathBlabelBall.bounce.if_4.pathBlabelBall.bounce.if_3.pathBpushpointer0pushlocal0pushlocal1callBall.setDestination3poptemp0pushconstant0return
+function Ball.new 0
+push constant 15
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+push argument 1
+pop this 1
+push argument 2
+pop this 10
+push argument 3
+push constant 6
+sub
+pop this 11
+push argument 4
+pop this 12
+push argument 5
+push constant 6
+sub
+pop this 13
+push constant 0
+pop this 14
+push pointer 0
+call Ball.show 1
+pop temp 0
+push pointer 0
+return
+function Ball.dispose 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function Ball.show 0
+push argument 0
+pop pointer 0
+push constant 1
+neg
+call Screen.setColor 1
+pop temp 0
+push pointer 0
+call Ball.draw 1
+pop temp 0
+push constant 0
+return
+function Ball.hide 0
+push argument 0
+pop pointer 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push pointer 0
+call Ball.draw 1
+pop temp 0
+push constant 0
+return
+function Ball.draw 0
+push argument 0
+pop pointer 0
+push this 0
+push this 1
+push this 0
+push constant 5
+add
+push this 1
+push constant 5
+add
+call Screen.drawRectangle 4
+pop temp 0
+push constant 0
+return
+function Ball.getLeft 0
+push argument 0
+pop pointer 0
+push this 0
+return
+function Ball.getRight 0
+push argument 0
+pop pointer 0
+push this 0
+push constant 5
+add
+return
+function Ball.setDestination 3
+push argument 0
+pop pointer 0
+push argument 1
+push this 0
+sub
+pop this 2
+push argument 2
+push this 1
+sub
+pop this 3
+push this 2
+call Math.abs 1
+pop local 0
+push this 3
+call Math.abs 1
+pop local 1
+push local 0
+push local 1
+lt
+pop this 7
+push this 7
+not
+if-goto Ball.setDestination.if_1.pathA
+push local 0
+pop local 2
+push local 1
+pop local 0
+push local 2
+pop local 1
+push this 1
+push argument 2
+lt
+pop this 8
+push this 0
+push argument 1
+lt
+pop this 9
+goto Ball.setDestination.if_1.pathB
+label Ball.setDestination.if_1.pathA
+push this 0
+push argument 1
+lt
+pop this 8
+push this 1
+push argument 2
+lt
+pop this 9
+label Ball.setDestination.if_1.pathB
+push constant 2
+push local 1
+call Math.multiply 2
+push local 0
+sub
+pop this 4
+push constant 2
+push local 1
+call Math.multiply 2
+pop this 5
+push constant 2
+push local 1
+push local 0
+sub
+call Math.multiply 2
+pop this 6
+push constant 0
+return
+function Ball.move 0
+push argument 0
+pop pointer 0
+push pointer 0
+call Ball.hide 1
+pop temp 0
+push this 4
+push constant 0
+lt
+not
+if-goto Ball.move.if_1.pathA
+push this 4
+push this 5
+add
+pop this 4
+goto Ball.move.if_1.pathB
+label Ball.move.if_1.pathA
+push this 4
+push this 6
+add
+pop this 4
+push this 9
+not
+if-goto Ball.move.if_2.pathA
+push this 7
+not
+if-goto Ball.move.if_3.pathA
+push this 0
+push constant 4
+add
+pop this 0
+goto Ball.move.if_3.pathB
+label Ball.move.if_3.pathA
+push this 1
+push constant 4
+add
+pop this 1
+label Ball.move.if_3.pathB
+goto Ball.move.if_2.pathB
+label Ball.move.if_2.pathA
+push this 7
+not
+if-goto Ball.move.if_4.pathA
+push this 0
+push constant 4
+sub
+pop this 0
+goto Ball.move.if_4.pathB
+label Ball.move.if_4.pathA
+push this 1
+push constant 4
+sub
+pop this 1
+label Ball.move.if_4.pathB
+label Ball.move.if_2.pathB
+label Ball.move.if_1.pathB
+push this 8
+not
+if-goto Ball.move.if_5.pathA
+push this 7
+not
+if-goto Ball.move.if_6.pathA
+push this 1
+push constant 4
+add
+pop this 1
+goto Ball.move.if_6.pathB
+label Ball.move.if_6.pathA
+push this 0
+push constant 4
+add
+pop this 0
+label Ball.move.if_6.pathB
+goto Ball.move.if_5.pathB
+label Ball.move.if_5.pathA
+push this 7
+not
+if-goto Ball.move.if_7.pathA
+push this 1
+push constant 4
+sub
+pop this 1
+goto Ball.move.if_7.pathB
+label Ball.move.if_7.pathA
+push this 0
+push constant 4
+sub
+pop this 0
+label Ball.move.if_7.pathB
+label Ball.move.if_5.pathB
+push this 0
+push this 10
+gt
+not
+not
+if-goto Ball.move.if_8.pathA
+push constant 1
+pop this 14
+push this 10
+pop this 0
+goto Ball.move.if_8.pathB
+label Ball.move.if_8.pathA
+label Ball.move.if_8.pathB
+push this 0
+push this 11
+lt
+not
+not
+if-goto Ball.move.if_9.pathA
+push constant 2
+pop this 14
+push this 11
+pop this 0
+goto Ball.move.if_9.pathB
+label Ball.move.if_9.pathA
+label Ball.move.if_9.pathB
+push this 1
+push this 12
+gt
+not
+not
+if-goto Ball.move.if_10.pathA
+push constant 3
+pop this 14
+push this 12
+pop this 1
+goto Ball.move.if_10.pathB
+label Ball.move.if_10.pathA
+label Ball.move.if_10.pathB
+push this 1
+push this 13
+lt
+not
+not
+if-goto Ball.move.if_11.pathA
+push constant 4
+pop this 14
+push this 13
+pop this 1
+goto Ball.move.if_11.pathB
+label Ball.move.if_11.pathA
+label Ball.move.if_11.pathB
+push pointer 0
+call Ball.show 1
+pop temp 0
+push this 14
+return
+function Ball.bounce 5
+push argument 0
+pop pointer 0
+push this 2
+push constant 10
+call Math.divide 2
+pop local 2
+push this 3
+push constant 10
+call Math.divide 2
+pop local 3
+push argument 1
+push constant 0
+eq
+not
+if-goto Ball.bounce.if_1.pathA
+push constant 10
+pop local 4
+goto Ball.bounce.if_1.pathB
+label Ball.bounce.if_1.pathA
+push this 2
+push constant 0
+lt
+not
+push argument 1
+push constant 1
+eq
+and
+push this 2
+push constant 0
+lt
+push argument 1
+push constant 1
+neg
+eq
+and
+or
+not
+if-goto Ball.bounce.if_2.pathA
+push constant 20
+pop local 4
+goto Ball.bounce.if_2.pathB
+label Ball.bounce.if_2.pathA
+push constant 5
+pop local 4
+label Ball.bounce.if_2.pathB
+label Ball.bounce.if_1.pathB
+push this 14
+push constant 1
+eq
+not
+if-goto Ball.bounce.if_3.pathA
+push constant 506
+pop local 0
+push local 3
+push constant 50
+neg
+call Math.multiply 2
+push local 2
+call Math.divide 2
+pop local 1
+push this 1
+push local 1
+push local 4
+call Math.multiply 2
+add
+pop local 1
+goto Ball.bounce.if_3.pathB
+label Ball.bounce.if_3.pathA
+push this 14
+push constant 2
+eq
+not
+if-goto Ball.bounce.if_4.pathA
+push constant 0
+pop local 0
+push local 3
+push constant 50
+call Math.multiply 2
+push local 2
+call Math.divide 2
+pop local 1
+push this 1
+push local 1
+push local 4
+call Math.multiply 2
+add
+pop local 1
+goto Ball.bounce.if_4.pathB
+label Ball.bounce.if_4.pathA
+push this 14
+push constant 3
+eq
+not
+if-goto Ball.bounce.if_5.pathA
+push constant 250
+pop local 1
+push local 2
+push constant 25
+neg
+call Math.multiply 2
+push local 3
+call Math.divide 2
+pop local 0
+push this 0
+push local 0
+push local 4
+call Math.multiply 2
+add
+pop local 0
+goto Ball.bounce.if_5.pathB
+label Ball.bounce.if_5.pathA
+push constant 0
+pop local 1
+push local 2
+push constant 25
+call Math.multiply 2
+push local 3
+call Math.divide 2
+pop local 0
+push this 0
+push local 0
+push local 4
+call Math.multiply 2
+add
+pop local 0
+label Ball.bounce.if_5.pathB
+label Ball.bounce.if_4.pathB
+label Ball.bounce.if_3.pathB
+push pointer 0
+push local 0
+push local 1
+call Ball.setDestination 3
+pop temp 0
+push constant 0
+return
