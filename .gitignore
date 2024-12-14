@@ -6,5 +6,6 @@ __pycache__
 output.xml
 output.vm
 *.log
+*.xml
 output.vm
 commands.txt
