@@ -43,11 +43,12 @@ class TestIntegration(unittest.TestCase):
       with self.subTest(input_path=input_path, log_level=log_level, ans_path=ans_path):
         output = self.setup()
         JackAnalyzer.main(input_path, log_level, output)
-        with open(output, "w+") as output_file, open(ans_path, "w+") as ans_file:
+        with open(output, "r") as output_file, open(ans_path, "r") as ans_file:
           contents = output_file.read()
-          no_white_space = re.sub(r"\s+", "", contents)
-          output_file.write(no_white_space)
+          cleaned_output = re.sub(r"\s+", "", contents)
           contents = ans_file.read()
-          no_white_space = re.sub(r"\s+", "", contents)
-          ans_file.write(no_white_space)
+          cleaned_ans = re.sub(r"\s+", "", contents)
+        with open(output, "w") as output_file, open(ans_path, "w") as ans_file:
+          output_file.write(cleaned_output)
+          ans_file.write(cleaned_ans)
         self.assertTrue(filecmp.cmp(output, ans_path), "The files are not the same")
