@@ -24,7 +24,6 @@ class CompilationEngine:
     self.class_name = None
     self.class_var_config = {}
     self.subroutine_config = {}
-    self.operator = {}
     self.if_count = 0
     self.while_count = 0
 
@@ -119,10 +118,11 @@ class CompilationEngine:
     var_type, var_kind, var_idx = self.resolve_class_type_to_call(var_name)
     logger.debug(f"let statement - type: {var_type}, var_kind: {var_kind}, var_idx: {var_idx}")
     if self.tokenizer.peek() == "[": # LHS array
+      self.writer.write_push(var_kind, var_idx) # base address of the array
       self.process_rule(TokenType.SYMBOL, "[")
       self.compile_expression()
       self.process_rule(TokenType.SYMBOL, "]")
-      self.writer.write_arithmetic("add")
+      self.writer.write_arithmetic("add") # get the particular index we are addresssing
       is_assignment_to_array = True
     self.process_rule(TokenType.SYMBOL, "=")
     self.compile_expression() # potentially RHS of the array
@@ -213,18 +213,19 @@ class CompilationEngine:
     return count
 
   def compile_expression(self, to_print = True):
+    operator = {}
     logger.debug(f"{self.expression_global_counter}.{self.term_global_counter} compile_expression()")
     self.expression_global_counter += 1
     if to_print:
       logger.debug("<expression>")
     self.compile_term(to_print)
     while self.tokenizer.peek() in self.operator_list:
-      self.operator[len(self.operator) + 1] = self.process_rule(TokenType.SYMBOL, *self.operator_list)
+      operator[len(operator) + 1] = self.process_rule(TokenType.SYMBOL, *self.operator_list)
       self.compile_term()
-    while len(self.operator) > 0:
+    while len(operator) > 0:
       self.process_operator(
-        self.operator.pop(
-          len(self.operator)
+        operator.pop(
+          len(operator)
           )
         )
 
@@ -247,7 +248,7 @@ class CompilationEngine:
       self.writer.write_call("String.new", 1)
       for c in string_const:
         self.writer.write_push(SegmentTypes.CONSTANT.value, ord(c))
-        self.writer.write_call("String.appendChar", 1)
+        self.writer.write_call("String.appendChar", 2)
     elif current_token in self.keyword_constant_list:
       keyword_constant = self.process_rule(TokenType.KEYWORD, *self.keyword_constant_list)
       if keyword_constant == "true":
@@ -279,22 +280,23 @@ class CompilationEngine:
         self.writer.write_push(SegmentTypes.THAT.value, 0) # push value at THAT onto stack
       elif advance_token == "(":
         self.process_rule(TokenType.SYMBOL, "(")
-        arg_count = self.compile_expression_list()
         if current_token not in self.class_symbol_table.table and current_token not in self.subroutine_symbol_table.table: # is a local method e.g. distance(p2)
           self.writer.write_push(SegmentTypes.POINTER.value, 0) # push THIS onto the stack
+          arg_count = self.compile_expression_list()
           self.writer.write_call(f"{self.class_name}.{current_token}", arg_count+1)
+        else:
+          self.compile_expression_list()
         self.process_rule(TokenType.SYMBOL, ")")
       elif advance_token == ".": # is a method on an external class
         variable_to_call = current_token
+        class_type, class_kind, class_index = self.resolve_class_type_to_call(variable_to_call)
+        if class_index > -1:
+          self.writer.write_push(class_kind, class_index) # push the class that the method is being called on
         self.process_rule(TokenType.SYMBOL, ".")
         subroutine_to_call = self.process_token(TokenType.IDENTIFIER)
         self.process_rule(TokenType.SYMBOL, "(")
         arg_count = self.compile_expression_list()
-        class_type, class_kind, class_index = self.resolve_class_type_to_call(variable_to_call)
-        if class_index > -1:
-          self.writer.write_push(class_kind, class_index) # push the class that the method is being called on
-          arg_count += 1
-        self.writer.write_call(f"{class_type}.{subroutine_to_call}", arg_count)
+        self.writer.write_call(f"{class_type}.{subroutine_to_call}", arg_count + 1 if class_index > -1 else arg_count)
         self.process_rule(TokenType.SYMBOL, ")")
       else:
         class_type, class_kind, class_index = self.resolve_class_type_to_call(current_token)
