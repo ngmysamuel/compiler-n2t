@@ -1,5 +1,3 @@
-# I have <expression> and <term> unneccessarily
-
 from compiler.init_logging import logger
 from compiler.symbol_table import SymbolTable
 
