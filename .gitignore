@@ -7,5 +7,5 @@ output.xml
 output.vm
 *.log
 *.xml
-output.vm
+*.vm
 commands.txt
