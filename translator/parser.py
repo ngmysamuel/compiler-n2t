@@ -106,13 +106,13 @@ class Parser:
         return False
 
     def clean_lines(self, line: str) -> bool:
-        """Clean up assembly code.
+        """Cleans up VM code.
 
         Set the cleaned line into self.current_line.
         And returns True if its the end of the file, else, False.
 
         Args:
-          line: the assembly code to be cleaned
+          line: the VM code to be cleaned
 
         """
         if not line:  # EOF
