@@ -1,5 +1,3 @@
-# I have <expression> and <term> unneccessarily
-
 from compiler_xml.init_logging import logger
 
 from compiler_xml.enumerations.TokenType import TokenType
