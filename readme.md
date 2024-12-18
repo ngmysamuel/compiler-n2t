@@ -39,9 +39,9 @@ As part of Nand2Tetris, this project takes high level code (known as JACK) and t
 1. `git clone https://github.com/ngmysamuel/compiler-n2t.git`
 2. `cd compiler-n2t`
 3. To run
-    - Compiler: `py -m compiler_xml.JackAnalyzer -p path/to/jack/code -o <path/to/output/file>`
-    - Translator: `py -m translator.VMTranslator path/to/vm`
-    - Assembler: `py -m assembly.driver path/to/file.asm path/to/output.hack`
+    - Compiler: `py -m compiler_xml.JackAnalyzer -p path/to/input.jack -o path/to/output.vm`
+    - Translator: `py -m translator.VMTranslator path/to/input.vm path/to/output.asm`
+    - Assembler: `py -m assembly.driver path/to/input.asm path/to/output.hack`
 
 # How to test
 
