@@ -1,11 +1,11 @@
 .vscode
 __pycache__
-06/*
-07/*
-08/*
+06/
 output.xml
 output.vm
 *.log
 *.xml
 *.vm
 commands.txt
+!07/**/*.vm
+!08/**/*.vm

@@ -7,20 +7,13 @@ import sys
 from translator import codewriter, parser
 
 
-def main(src_path):
+def main(src_path, dest_path):
     """Driver function.
 
     Args:
         src_path: Input VM file to translate into assembly
-
+        dest_path: Output ASM file containing assembly
     """
-    if os.path.isfile(src_path):
-        dest_path = src_path.replace(".vm", ".asm")
-    else:
-        dest_path = os.path.join(
-            os.path.abspath(src_path),
-            f"{os.path.basename(src_path)}.asm",
-        )
     print(f"> writing to {dest_path}")
     c = codewriter.CodeWriter()
 
@@ -77,5 +70,5 @@ def strip_lines(ans: str) -> str:
 
 if __name__ == "__main__":
     main(
-        sys.argv[1],
+        sys.argv[1], sys.argv[2]
     )  # TODO: allow for times when no arguments are passed - use current directory
