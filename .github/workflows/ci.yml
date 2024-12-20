@@ -2,6 +2,10 @@ name: Continuous Integration
 
 on: [push]
 
+permissions:
+  checks: write
+  pull-requests: write
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -19,6 +23,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install junitparser
+          pip install pyinstaller
 
       - name: Install Poetry
         uses: abatilo/actions-poetry@v2
@@ -37,12 +42,11 @@ jobs:
       - name: Run Tests
         run: |
           mkdir test-results
-          pwd
-          ls -la
           poetry run python -m test.run_all_tests
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
         with:
           files: test-reports/results.xml
 
@@ -59,3 +63,7 @@ jobs:
           else:
             print('All tests passed')
           "
+
+      - name: Test IF condition
+        if: success()
+        run: ls -la
