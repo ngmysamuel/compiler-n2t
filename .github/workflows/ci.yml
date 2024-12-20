@@ -37,7 +37,7 @@ jobs:
       - name: Run Tests
         run: |
           mkdir test-results
-          poetry run py -m test.run_all_tests
+          poetry run python -m test.run_all_tests
 
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
