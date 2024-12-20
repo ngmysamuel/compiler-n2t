@@ -9,7 +9,7 @@ class TestIntegrationBasic(unittest.TestCase):
 
     file_list = []
 
-    def setUp(self) -> str:
+    def getOutputFile(self) -> str:
         output_file = NamedTemporaryFile(
             delete=False,
             mode="w",
@@ -36,7 +36,7 @@ class TestIntegrationBasic(unittest.TestCase):
         ]
         for src_path, ans_path in files_to_test:
             with self.subTest(src_path=src_path, ans_path=ans_path):
-                output_path = self.setUp()
+                output_path = self.getOutputFile()
                 driver.main(src_path, output_path)
                 with open(output_path) as output_file, open(ans_path) as ans_file:
                     contents = output_file.read()

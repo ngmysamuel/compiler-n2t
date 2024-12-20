@@ -14,25 +14,24 @@ class TestIntegrationFunctionAndBranching(unittest.TestCase):
         output: file containing the output ASM code
     """
 
-    @classmethod
-    def setUpClass(cls) -> None:
-        cls.output = NamedTemporaryFile(
+    def getOutputFile(self) -> None:
+        self.output = NamedTemporaryFile(
             delete=False,
             mode="w",
             newline="",
             prefix="output_",
             suffix=".asm",
         )
-        cls.output_name = cls.output.name
-        cls.output.close()
+        self.output_name = self.output.name
+        self.output.close()
 
-    @classmethod
-    def tearDownClass(cls) -> None:
-        os.remove(cls.output_name)
+    def tearDown(self) -> None:
+        os.remove(self.output_name)
 
     def test_integration(self) -> None:
         files_to_test = [('./08/FibonacciElement', './08/FibonacciElement/FibonacciElementAns.asm')]
         for src_path, ans_path in files_to_test:
+            self.getOutputFile()
             vmt.main(src_path, self.output_name)
             with open(self.output_name, "r") as output_file, open(ans_path, "r") as ans_file:
                 contents = output_file.read()

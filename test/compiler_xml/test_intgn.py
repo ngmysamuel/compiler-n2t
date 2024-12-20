@@ -9,7 +9,7 @@ class TestIntgration(unittest.TestCase):
 
   file_list = []
 
-  def setUp(self):
+  def getOutputFile(self):
     output_file = NamedTemporaryFile(
       delete=False,
       mode="w",
@@ -59,7 +59,7 @@ class TestIntgration(unittest.TestCase):
       ]
     for src_path, answer_path in files_to_test:
       with self.subTest(src_path=src_path, answer_path=answer_path):
-        output_path = self.setUp()
+        output_path = self.getOutputFile()
         ja.main(src_path, "d", output_path)
         with open(answer_path, "r") as answer, open(output_path, "r") as output:
           contents = answer.read()
