@@ -1,5 +1,6 @@
 .vscode
 __pycache__
+test-results/
 06/*.zip
 output.xml
 output.vm

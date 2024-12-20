@@ -24,9 +24,8 @@ class TestIntegrationBasic(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls) -> None:
-        for i, j in cls.file_list:
+        for i in cls.file_list:
             os.remove(i)
-            os.remove(j)
 
     def test_integration(self) -> None:
         files_to_test = [

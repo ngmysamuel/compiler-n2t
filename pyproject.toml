@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "compiler-n2t"
+version = "0.1.0"
+description = "A compiler for JACK to binary targetting the Nand2Tetris course's instruction set"
+authors = ["Samuel Ng"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+unittest-xml-reporting = {url = "https://files.pythonhosted.org/packages/ed/40/3bf1afc96e93c7322520981ac4593cbb29daa21b48d32746f05ab5563dca/unittest-xml-reporting-3.2.0.tar.gz"}
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
