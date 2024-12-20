@@ -37,6 +37,8 @@ jobs:
       - name: Run Tests
         run: |
           mkdir test-results
+          pwd
+          ls -la
           poetry run python -m test.run_all_tests
 
       - name: Publish Test Results
