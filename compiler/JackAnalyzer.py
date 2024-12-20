@@ -8,7 +8,7 @@ from compiler.jack_tokenizer import JackTokenizer
 from compiler.vm_writer import VMWriter
 
 
-def main(path, log_level, dest_path):
+def main(path: str, log_level: str, dest_path: str) -> None:
     print(f"path: {path}\nlog_level: {log_level}\ndest_path: {dest_path}")
     il.set_level("d" if log_level is None else log_level)
     path = "." if path is None else path
@@ -48,8 +48,7 @@ def main(path, log_level, dest_path):
                 os.path.join(dest_path, p.replace(".jack", ".vm")),
             )
 
-
-def run(path, dest_path):
+def run(path: os.path, dest_path: os.path) -> None:
     with VMWriter(dest_path) as vm, JackTokenizer(path) as jt:
         ce = CompilationEngine(vm)
         try:
@@ -57,7 +56,6 @@ def run(path, dest_path):
         except Exception as e:
             print(e)
         ce.compile()
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
