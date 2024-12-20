@@ -66,4 +66,6 @@ jobs:
 
       - name: Test IF condition
         if: success()
-        run: ls -la
+        run: |
+          cd test-results
+          ls -la
