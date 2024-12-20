@@ -58,8 +58,8 @@ jobs:
       - name: Build executable
         if: success() && github.ref == 'refs/heads/main'
         run: |
-          pyinstaller --onefile compiler/JackAnalyzer.py
-          mv dist/JackAnalyzer dist/compiler_n2t
+          pyinstaller --onefile compiler/end_to_end.py
+          mv dist/end_to_end dist/compiler_n2t
 
       - name: Create Tag
         if: success() && github.ref == 'refs/heads/main'
