@@ -55,7 +55,14 @@ jobs:
         if: success() && github.ref == 'refs/heads/ASSEM-20/cicd'
         run: |
           pyinstaller --onefile compiler/JackAnalyzer.py
-          mv dist/JackAnalyzer ./compiler
+
+      - name: Look
+        run: |
+          pwd
+          ls -la
+          cd dist
+          ls -la
+          cd ..
 
       - name: Create Tag
         if: success() && github.ref == 'refs/heads/ASSEM-20/cicd'
@@ -68,25 +75,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create Release
-        if: success() && github.ref == 'refs/heads/ASSEM-20/cicd'
+      - name: Create Github Release
         id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
+          files: dist/JackAnalyzer
           tag_name: ${{ env.TAG_NAME }}
-          release_name: Release ${{ env.TAG_NAME }}
-          draft: false
-          prerelease: false
-      
-      - name: Upload Release Asset
-        if: success() && github.ref == 'refs/heads/ASSEM-20/cicd'
-        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./compiler
-          asset_name: compiler
-          asset_content_type: application/octet-stream
