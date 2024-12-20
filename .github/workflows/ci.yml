@@ -56,7 +56,7 @@ jobs:
           files: ./test-results/results.xml
 
       - name: Build executable
-        if: success() && github.ref == 'refs/heads/main'
+        if: success() && github.ref == 'refs/heads/fix/ci'
         run: |
           pyinstaller --onefile end_to_end/end_to_end.py
           mv dist/end_to_end dist/compiler_n2t
