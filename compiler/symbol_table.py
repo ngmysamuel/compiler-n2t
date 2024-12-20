@@ -1,4 +1,9 @@
 class SymbolTable:
+    """
+    Helper Class
+    Mainly a dictionary to keep a record of variables seen at the class/subroutine level
+    Has helper functions to return the type, kind, and index of the variable
+    """
     def __init__(self):
         self.table = {}  # { var_name : (idx, type, kind) }
         self.count_of_kinds = {}

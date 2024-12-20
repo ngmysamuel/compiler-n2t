@@ -3,7 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def set_level(level):
+def set_level(level: str) -> None:
     match level:
         case "d":
             logging.basicConfig(

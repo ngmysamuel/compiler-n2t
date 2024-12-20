@@ -9,7 +9,7 @@ from compiler.init_logging import logger
 
 
 class JackTokenizer:
-    def __init__(self, path):
+    def __init__(self, path: str) -> None:
         self.file = None
         self.file_path = path
         self.keywords = [
@@ -73,7 +73,10 @@ class JackTokenizer:
         finally:
             logger.info("Tokenizer is closed")
 
-    def peek(self):
+    def peek(self) -> str:
+        """
+        Gets the next token without advancing the file
+        """
         logger.debug("+++++++++++ Peeking START +++++++++++")
         current_location = self.file.tell()
         advance_token = self.advance(True)
@@ -81,7 +84,13 @@ class JackTokenizer:
         logger.debug("+++++++++++ Peeking END +++++++++++")
         return advance_token
 
-    def advance(self, is_peek):
+    def advance(self, is_peek: bool) -> None:
+        """
+        Gets the next token and advances the file
+        Automatically cleans, groups, and moves past characters
+        that are not valid tokens
+        Get the next token from the instance variable
+        """
         is_comment = False
         is_numeric = False
         is_alpha = False
@@ -208,5 +217,9 @@ class JackTokenizer:
                 )
                 self.temp += ch
 
-    def is_whitespace(self, ch):
+    def is_whitespace(self, ch: str) -> bool:
+        """
+        Helper function
+        Decides if a character is white space or not
+        """
         return not (ch.isalpha() or ch.isnumeric() or ch in self.symbols or ch == '"')

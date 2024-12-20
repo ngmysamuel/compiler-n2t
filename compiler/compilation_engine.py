@@ -4,7 +4,7 @@ from compiler.enumerations.SymbolKind import SymbolKind
 from compiler.enumerations.TokenType import TokenType
 from compiler.init_logging import logger
 from compiler.symbol_table import SymbolTable
-
+from compiler.jack_tokenizer import JackTokenizer
 
 class CompilationEngine:
     def __init__(self, vmwriter):
@@ -24,13 +24,24 @@ class CompilationEngine:
         self.if_count = 0
         self.while_count = 0
 
-    def set_tokenizer(self, t):
+    def set_tokenizer(self, t: JackTokenizer) -> None:
+        """
+        Helper method - sets a tokenizer the instance can use
+        """
         self.tokenizer = t
 
-    def compile(self):
+    def compile(self) -> None:
+        """
+        Entry method for compilation - every JACK file that needs to be compiled must be in a class
+        """
         self.compile_class()
 
-    def compile_class(self):
+    def compile_class(self) -> None:
+        """
+        Compiles the semantics related to a class.
+        For example, the name of the class.
+        Kicks off the process of compiling other components of the class e.g. class level variables
+        """
         self.process_rule(TokenType.KEYWORD, "class")
         self.class_name = self.process_token(TokenType.IDENTIFIER)
         self.process_rule(TokenType.SYMBOL, "{")
@@ -44,28 +55,43 @@ class CompilationEngine:
             self.subroutine_symbol_table.reset()
         self.process_rule(TokenType.SYMBOL, "}")
 
-    def compile_sub_routine_dec(self):
+    def compile_sub_routine_dec(self) -> None:
+        """
+        Compiles the semantics related the declaration of sub routines
+        Sub routines are either methods, functions, or constructors
+        Config details of the sub routine is captures in the instance variable
+        subroutine_config for use later when more information is available.
+        """
         self.if_count = 0
         self.while_count = 0
+        # constructor | function | method
         self.subroutine_config["type"] = self.process_rule(
             TokenType.KEYWORD, *[i.value for i in SubRoutineType]
-        )  # constructor | function | method
+        )
+        # void | type - can be either IDENTIFIER or KEYWORD
         self.subroutine_config["return_type"] = self.process_token(
             "any"
-        )  # void | type - can be either IDENTIFIER or KEYWORD
+        )
+        # subRoutine name
         self.subroutine_config["name"] = self.process_token(
             TokenType.IDENTIFIER
-        )  # subRoutine name
+        )
         if self.subroutine_config["type"] == SubRoutineType.METHOD.value:
+            # add THIS to the ARG list
             self.subroutine_symbol_table.define(
                 "this", self.class_name, SymbolKind.ARG.value
-            )  # add THIS to the ARG list
+            )
         self.process_rule(TokenType.SYMBOL, "(")
         self.compile_parameter_list()
         self.process_rule(TokenType.SYMBOL, ")")
         self.compile_sub_routine_body()
 
-    def compile_sub_routine_body(self):
+    def compile_sub_routine_body(self) -> None:
+        """
+        Compiles the semantics related to the body in the sub routine
+        Subroutine declaration is actually converted to VM here
+        compile_statements is called here
+        """
         logger.debug("<subroutineBody>")
         self.process_rule(TokenType.SYMBOL, "{")
         while self.tokenizer.peek() == "var":
@@ -76,6 +102,9 @@ class CompilationEngine:
         logger.debug("</subroutineBody>")
 
     def write_subroutine_signature(self):
+        """
+        Makes use of the instance variable 'subroutine_config' to write subroutine signature in VM
+        """
         self.writer.write_function(
             f"{self.class_name}.{self.subroutine_config['name']}",
             self.subroutine_symbol_table.var_count(SegmentTypes.LOCAL.value),
@@ -97,7 +126,13 @@ class CompilationEngine:
                 SegmentTypes.POINTER.value, 0
             )  # pop pointer 0 -> set THIS
 
-    def compile_var_dec(self):
+    def compile_var_dec(self) -> None:
+        """
+        At the top of every subroutine body, the user can decide to declare some
+        local variables.
+        This method converts those declarations into their representations in the 
+        symbol table
+        """
         logger.debug("<varDec>")
         self.process_rule(TokenType.KEYWORD, "var")
         var_type = self.process_token(
@@ -120,7 +155,12 @@ class CompilationEngine:
         self.process_rule(TokenType.SYMBOL, ";")
         logger.debug("</varDec>")
 
-    def compile_statments(self):
+    def compile_statments(self) -> None:
+        """
+        The meat of every sub routine - statements
+        Decides what kind of statement the current line represents and 
+        dispatches appropriately
+        """
         logger.debug("<statements>")
         while self.tokenizer.peek() != "}":
             match self.tokenizer.peek():
@@ -136,7 +176,11 @@ class CompilationEngine:
                     self.compile_return_statment()
         logger.debug("</statements>")
 
-    def compile_let_statment(self):
+    def compile_let_statment(self) -> None:
+        """
+        Compiles a LET statment
+        Some complications arises when we are assigning/reading from an array
+        """
         logger.debug("<letStatement>")
         is_assignment_to_array = False
         self.process_rule(TokenType.KEYWORD, "let")
@@ -174,7 +218,11 @@ class CompilationEngine:
         self.process_rule(TokenType.SYMBOL, ";")
         logger.debug("</letStatement>")
 
-    def compile_if_statment(self, if_count):
+    def compile_if_statment(self, if_count: int) -> None:
+        """
+        Compiles an IF statement
+        Some complication arises from nested IF statements
+        """
         self.if_count += 1
         if_count += 1
         logger.debug("<ifStatement>")
@@ -208,7 +256,11 @@ class CompilationEngine:
         )
         logger.debug("</ifStatement>")
 
-    def compile_while_statment(self, while_count):
+    def compile_while_statment(self, while_count: int) -> None:
+        """
+        Compiles a WHILE statement
+        Some complication arises from nested WHILE statements
+        """
         self.while_count += 1
         while_count += 1
         logger.debug("<whileStatement>")
@@ -234,7 +286,10 @@ class CompilationEngine:
         )  # break label
         logger.debug("</whileStatement>")
 
-    def compile_do_statment(self):
+    def compile_do_statment(self) -> None:
+        """
+        Compiles a DO statement
+        """
         logger.debug("<doStatement>")
         self.process_rule(TokenType.KEYWORD, "do")
         self.compile_expression(False)
@@ -242,7 +297,10 @@ class CompilationEngine:
         self.writer.write_pop(SegmentTypes.TEMP.value, 0)
         logger.debug("</doStatement>")
 
-    def compile_return_statment(self):
+    def compile_return_statment(self) -> None:
+        """
+        Compiles a RETURN statement
+        """
         logger.debug("<returnStatement>")
         self.process_rule(TokenType.KEYWORD, "return")
         if self.tokenizer.peek() != ";":
@@ -253,7 +311,10 @@ class CompilationEngine:
         self.process_rule(TokenType.SYMBOL, ";")
         logger.debug("</returnStatement>")
 
-    def compile_expression_list(self):
+    def compile_expression_list(self) -> None:
+        """
+        Compiles the innards of a sub routine call
+        """
         count = 0
         logger.debug("<expressionList>")
         if self.tokenizer.peek() != ")":  # end of expression list
@@ -266,7 +327,11 @@ class CompilationEngine:
         logger.debug("</expressionList>")
         return count
 
-    def compile_expression(self, to_print=True):
+    def compile_expression(self, to_print=True) -> None:
+        """
+        1 of 2 parts that make up the heart of the compiler
+        Some complications arise from handling bracket priority in mathematical operations
+        """
         operator = {}
         logger.debug(
             f"{self.expression_global_counter}.{self.term_global_counter} compile_expression()"
@@ -290,7 +355,14 @@ class CompilationEngine:
         if to_print:
             logger.debug("</expression>")
 
-    def compile_term(self, to_print=True):
+    def compile_term(self, to_print=True) -> None:
+        """
+        1 of 2 parts that make up the heart of the compiler
+        Composed of 2 parts
+        - Decides what to do when it encounters integers, strings, keywords, operators, expressions lists
+        - if it encounters an identifier, it will take 1 look ahead to decide if its an array, function
+        call, or a method call
+        """
         logger.debug(
             f"{self.expression_global_counter}.{self.term_global_counter}. compile_term()"
         )
@@ -335,30 +407,32 @@ class CompilationEngine:
                 class_type, class_kind, class_index = self.resolve_class_type_to_call(
                     current_token
                 )
+                # push base address of array onto stack
                 self.writer.write_push(
                     class_kind, class_index
-                )  # push base address of array onto stack
+                )
                 self.process_rule(TokenType.SYMBOL, "[")
                 self.compile_expression()  # resolve internals of []
-                self.writer.write_arithmetic(
-                    "add"
-                )  # get address of where we are addressing
+                # get address of where we are addressing
+                self.writer.write_arithmetic("add")
                 self.process_rule(TokenType.SYMBOL, "]")
+                # set THAT to where we are addressing
                 self.writer.write_pop(
                     SegmentTypes.POINTER.value, 1
-                )  # set THAT to where we are addressing
+                )
+                # push value at THAT onto stack
                 self.writer.write_push(
                     SegmentTypes.THAT.value, 0
-                )  # push value at THAT onto stack
+                )
             elif advance_token == "(":
                 self.process_rule(TokenType.SYMBOL, "(")
+                # is a local method e.g. distance(p2)
                 if (
                     current_token not in self.class_symbol_table.table
                     and current_token not in self.subroutine_symbol_table.table
-                ):  # is a local method e.g. distance(p2)
-                    self.writer.write_push(
-                        SegmentTypes.POINTER.value, 0
-                    )  # push THIS onto the stack
+                ):
+                    # push THIS onto the stack
+                    self.writer.write_push(SegmentTypes.POINTER.value, 0)
                     arg_count = self.compile_expression_list()
                     self.writer.write_call(
                         f"{self.class_name}.{current_token}", arg_count + 1
@@ -371,10 +445,10 @@ class CompilationEngine:
                 class_type, class_kind, class_index = self.resolve_class_type_to_call(
                     variable_to_call
                 )
-                if class_index > -1:
+                if class_index > -1: # push the class that the method is being called on
                     self.writer.write_push(
                         class_kind, class_index
-                    )  # push the class that the method is being called on
+                    )
                 self.process_rule(TokenType.SYMBOL, ".")
                 subroutine_to_call = self.process_token(TokenType.IDENTIFIER)
                 self.process_rule(TokenType.SYMBOL, "(")
@@ -392,7 +466,10 @@ class CompilationEngine:
         if to_print:
             logger.debug("</term>")
 
-    def compile_parameter_list(self):
+    def compile_parameter_list(self) -> None:
+        """
+        Compiles a param list
+        """
         logger.debug("<parameterList>")
         while self.tokenizer.peek() != ")":
             var_type = self.process_token("any")  # variable type
@@ -409,16 +486,22 @@ class CompilationEngine:
                 )
         logger.debug("</parameterList>")
 
-    def compile_class_var_dec(self):
+    def compile_class_var_dec(self) -> None:
+        """
+        Compiles class level variable declarations
+        Similar to the subroutine level one
+        """
+        # static | field
         self.class_var_config["kind"] = (
             SegmentTypes.THIS.value
             if self.process_rule(TokenType.KEYWORD, "static", "field") == "field"
             else SegmentTypes.STATIC.value
-        )  # static | field
+        )
         self.class_var_config["type"] = self.process_token("any")  # variable type
+        # variable name
         self.class_var_config["name"] = self.process_token(
             TokenType.IDENTIFIER
-        )  # variable name
+        )
         self.class_symbol_table.define(
             self.class_var_config["name"],
             self.class_var_config["type"],
@@ -442,7 +525,13 @@ class CompilationEngine:
             )
         self.process_rule(TokenType.SYMBOL, ";")
 
-    def process_rule(self, type, *s):
+    def process_rule(self, type: str, *s) -> None:
+        """
+        Helper function 
+        Ensures that argument 'type' matches the token's type we are getting
+        Passing in argument S also ensures that the token we get must be a
+        value from S
+        """
         logger.debug("process_rule()")
         current_token = self.tokenizer.advance(False)
         current_type = self.tokenizer.token_type
@@ -461,7 +550,12 @@ class CompilationEngine:
             )
         return current_token
 
-    def process_token(self, type):
+    def process_token(self, type: str) -> None:
+        """
+        Helper function
+        Relaxed method where only the type matters. If type also does not matter,
+        pass in 'any'
+        """
         logger.debug("process_token()")
         current_token = self.tokenizer.advance(False).strip()
         current_type = self.tokenizer.token_type
@@ -483,7 +577,11 @@ class CompilationEngine:
             )
         return current_token
 
-    def process_operator(self, op):
+    def process_operator(self, op: str) -> None:
+        """
+        Helper function
+        Converts binary operator symbols into VM
+        """
         match op:
             case "+":
                 self.writer.write_arithmetic("add")
@@ -504,14 +602,22 @@ class CompilationEngine:
             case "=":
                 self.writer.write_arithmetic("eq")
 
-    def process_unary_operator(self, op):
+    def process_unary_operator(self, op: str) -> None:
+        """
+        Helper function
+        Converts unary operator symbols into VM
+        """
         match op:
             case "-":
                 self.writer.write_arithmetic("neg")
             case "~":
                 self.writer.write_arithmetic("not")
 
-    def resolve_class_type_to_call(self, name):
+    def resolve_class_type_to_call(self, name: str) -> tuple:
+        """
+        Helper function
+        Converts an identifier to the various semantics needed to make a call to it
+        """
         if name in self.subroutine_symbol_table.table:
             return (
                 self.subroutine_symbol_table.type_of(name),

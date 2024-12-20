@@ -1,4 +1,8 @@
 class VMWriter:
+    """
+    Helper Class
+    Encapsulates the logic needed to write to the output file
+    """
     def __init__(self, path):
         self.path = path
         self.file = None
