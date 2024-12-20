@@ -14,25 +14,23 @@ class TestIntegrationArithStack(unittest.TestCase):
         output_file: file containing the output ASM code
     """
 
-    @classmethod
-    def setUp(cls) -> None:
-        cls.output_file = NamedTemporaryFile(
+    def getOutputFile(self) -> None:
+        self.output_file = NamedTemporaryFile(
             delete=False,
             mode="w",
             newline="",
             suffix=".asm",
         )
-        cls.output_file_name = cls.output_file.name
-        cls.output_file.close()
+        self.output_file_name = self.output_file.name
+        self.output_file.close()
 
-    @classmethod
-    def tearDownClass(cls) -> None:
-        os.remove(cls.output_file_name)
+    def tearDown(self) -> None:
+        os.remove(self.output_file_name)
 
     def test_integration(self) -> None:
         files_to_test = [('./07/BasicTest/BasicTest.vm', './07/BasicTest/BasicTestAns.asm')]
         for src_path, ans_path in files_to_test:
-            self.setUp()
+            self.getOutputFile()
             vmt.main(src_path, self.output_file_name)
             with open(self.output_file_name, "r") as output_file, open(ans_path, "r") as ans_file:
                 contents = output_file.read()

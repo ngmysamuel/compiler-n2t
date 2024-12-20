@@ -7,11 +7,13 @@
 
 4. [How to test](#how-to-test)
 
-5. [Files](#files)
+5. [Continuous Integration](#continuous-integration)
 
-6. [Resources](#resources)
+6. [Files](#files)
 
-7. [Other useful links](#other-useful-links)
+7. [Resources](#resources)
+
+8. [Other useful links](#other-useful-links)
 
 # Overview
 
@@ -24,28 +26,48 @@ As part of Nand2Tetris, this project takes high level code (known as JACK) and t
     - Converts JACK code files (.jack) into VM code
     - There also a module `compiler_xml` which parses JACK code into XML representing its sematics. You normally would not use this.
 
-> Do note that the VM code, assembly, and binary generated only adheres to the language specifications defined in the Nand2Tetris course i.e. it does not actually on a easily available piece of hardware (e.g. x86) unless it adheres to the Nand2Tetris specification
+> Do note that the VM code, assembly, and binary generated only adheres to the language specifications defined in the Nand2Tetris course i.e. it does not actually work on an easily available piece of hardware (e.g. x86) unless it adheres to the Nand2Tetris specification
 
 # Prerequisites
 
 1. Python
 
-### Optional Prerequisites
-1. Git (if intending to `git clone`)
-2. See requirements.txt (if intending to build)
+### Optional Prerequisites (if intending to build)
+1. Git
+2. See `pyproject.toml`
 
 # How to run
 
-1. `git clone https://github.com/ngmysamuel/compiler-n2t.git`
-2. `cd compiler-n2t`
-3. To run
-    - Compiler: `py -m compiler_xml.JackAnalyzer -p path/to/input.jack -o path/to/output.vm`
-    - Translator: `py -m translator.VMTranslator path/to/input.vm path/to/output.asm`
-    - Assembler: `py -m assembly.driver path/to/input.asm path/to/output.hack`
+There are 2 ways.
+
+### 1. Build your own
+
+1. Clone the source code
+    - `git clone https://github.com/ngmysamuel/compiler-n2t.git`
+2. Ensure you are in the root of the project directory
+    - `cd compiler-n2t`
+3. Install dependencies (very minimal)
+    - `poetry install`
+    - You might need to install `pipx` and `poetry` separately first
+    - If you do not wish to use poetry, you just need to manage dependencies yourself. Open `pyproject.toml` and install the packages there.
+4. Activate the environment
+    - `poetry shell`
+    - Alternatively, pre-pend `poetry run` to all the commands in step 5 below
+5. To run
+    - Compiler: `py -m compiler_xml.JackAnalyzer -p path/to/jack/files -o path/to/vm/files`
+    - Translator: `py -m translator.VMTranslator path/to/vm/files path/to/asm/files`
+    - Assembler: `py -m assembly.driver path/to/asm/files path/to/hack/files`
+    - End to end: `py -m end_to_end.end_to_end -p path/to/jack/files`
+
+### 2. Download a release (for Unix)
+
+Download a release from the GitHub repository [here](https://github.com/ngmysamuel/compiler-n2t/releases). This release builds the `end_to_end` module.
+
+> Do note that the binary and assembly the `end_to_end` module generates will not produce the expected results as the OS is not yet included.
 
 # How to test
 
-Ensure you're in the root of the folder
+Ensure you're in the project root and the environment activated.
 
 1. Compiler
     - `py -m unittest test.compiler_xml.test_intgn`
@@ -53,8 +75,16 @@ Ensure you're in the root of the folder
     - `py -m unittest discover -s ./test/translator` or `py -m unittest test.translator.<test file name>`
 3. Assembler
     - `py -m unittest discover -s ./test/assembler` or `py -m unittest test.assembler.<test file name>`
+4. All
+    - `python -m test.run_all_tests`
 
-Note do not append the file extension to \<test file name\> 
+Note: do not append the file extension to \<test file name\> 
+
+# Continuous Integration
+
+Every `push` spins a CI that tests the code. You can view the test results in the job summary page.
+
+Every `merge` into `Main` will build a binary and create a new release which you can find [here](https://github.com/ngmysamuel/compiler-n2t/releases). Test results will also be published in the pull request.
 
 # Files
 
@@ -70,7 +100,7 @@ Parser.py
 
 Code.py
 > Converts the string mnemonics into binary
-> SWITCH statements
+> Made of SWITCH statements
 > Assembles assembly in binary code
 
 SymbolTable.py

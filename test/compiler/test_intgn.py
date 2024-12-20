@@ -8,7 +8,7 @@ class TestIntegration(unittest.TestCase):
 
   file_list = []
 
-  def setup(self):
+  def getOutputFile(self):
     output_file = NamedTemporaryFile(
       delete = False,
       mode="w",
@@ -21,7 +21,7 @@ class TestIntegration(unittest.TestCase):
     return output_file_name
   
   @classmethod
-  def tear_down_class(cls):
+  def tearDownClass(cls):
     for i in cls.file_list:
       os.remove(i)
 
@@ -41,7 +41,7 @@ class TestIntegration(unittest.TestCase):
     ]
     for input_path, log_level, ans_path in files_to_test:
       with self.subTest(input_path=input_path, log_level=log_level, ans_path=ans_path):
-        output = self.setup()
+        output = self.getOutputFile()
         JackAnalyzer.main(input_path, log_level, output)
         with open(output, "r") as output_file, open(ans_path, "r") as ans_file:
           contents = output_file.read()

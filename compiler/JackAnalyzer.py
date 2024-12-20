@@ -61,7 +61,7 @@ def run(path, dest_path):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-p", "--path", help="Path to VM file to compile")
+    parser.add_argument("-p", "--path", help="Path to JACK file to compile")
     parser.add_argument("-l", "--log_level", help="Logging level")
     parser.add_argument("-o", "--output", help="Path to output file")
     args = parser.parse_args()
