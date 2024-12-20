@@ -48,7 +48,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
-          files: test-reports/results.xml
+          files: ./test-results/results.xml
 
       - name: Check Test Results
         id: check-test-results
@@ -64,8 +64,13 @@ jobs:
             print('All tests passed')
           "
 
-      - name: Test IF condition
+      - name: Test IF condition PASS
         if: success()
         run: |
           cd test-results
           ls -la
+
+      - name: Test IF condition FAIL
+        if: failure()
+        run: |
+          echo 123
