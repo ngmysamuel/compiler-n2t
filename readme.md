@@ -67,6 +67,7 @@ Download a release from the GitHub repository [here](https://github.com/ngmysamu
 
 # How to test
 
+### Unit Testing
 Ensure you're in the project root and the environment activated.
 
 1. Compiler
@@ -78,7 +79,18 @@ Ensure you're in the project root and the environment activated.
 4. All
     - `python -m test.run_all_tests`
 
-Note: do not append the file extension to \<test file name\> 
+Note: do not append the file extension to \<test file name\>
+
+### System Testing
+
+1. Visit https://nand2tetris.github.io/web-ide/
+2. Run the module you wish to use (see [How to run](#how-to-run))
+3. Take the output files and upload it to site
+    - Compiler - upload the generated VM files into the "VM Emulator"
+    - Translator - upload the generated ASM files into the "CPU Emulator"
+    - Assembler - upload the generated HACK files into the "CPU Emulator"
+
+The Pong program (in 11/Pong) would be the most interesting program to test.
 
 # Continuous Integration
 

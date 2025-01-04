@@ -5,7 +5,11 @@ from compiler import JackAnalyzer
 from translator import VMTranslator
 from assembler import driver
 
-def main(input_path, log_level, output_path):
+def main(input_path: str, log_level: str, output_path: str) -> None:
+    """
+    Driver Function
+    Calls the corresponding driver functions of the other 3 modules
+    """
     input_path = "." if input_path is None else input_path
     input_path = os.path.abspath(input_path)
     directory = input_path
